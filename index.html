@@ -953,7 +953,7 @@ async function uploadProcess(fileData, fileName, mimeType, bgId) {
 }
 
 async function updateDisplayBg() {
-    // 1. 拦截逻辑保持不变
+// 1. 拦截逻辑保持不变
     const yv = document.getElementById('yearView');
     if (yv && yv.style.display !== 'none') return; 
 
@@ -985,22 +985,6 @@ async function updateDisplayBg() {
         }
     } catch (e) {
         console.log("背景加载失败", e);
-    }
-}
-
-        const bgLayer = document.getElementById('bg-layer');
-        const bodyTag = document.getElementById('body-tag');
-
-        if (s) {
-            bgLayer.style.backgroundImage = `url('${s}')`;
-            bodyTag.classList.add('has-bg');
-        } else {
-            // 已按需求注释，防止抹除年背景
-            //bgLayer.style.backgroundImage = 'none';
-            //bodyTag.classList.remove('has-bg');
-        
-    } catch (e) {
-        console.log("背景加载略过", e);
     }
 }
         function exportData(){ const b=new Blob([JSON.stringify(events)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='calendar_backup.json'; a.click(); }
