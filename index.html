@@ -5,167 +5,1733 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-.btn,.calendar-box,.header,body{display:flex}.calendar-box,.cell,.empty-cell,body{box-sizing:border-box}.s,.title{font-weight:700}.calendar-box,.event-bar{overflow:hidden;position:relative}.calendar-box,.cell,.event-bar,.ym-day{position:relative}.btn,.cell,.dot,.event-bar,.title,.tool-btn,.year-month-card{cursor:pointer}#bg-layer,#event-layer,#modal-overlay{top:0;left:0;height:100%}#bgOpacityRange,#blurRange{width:80px;min-width:60px;margin:0 5px;cursor:pointer}.style-control-group{display:flex;align-items:center;white-space:nowrap;font-size:14px}body{margin:0;padding:20px 8px;justify-content:center;align-items:center;min-height:100vh;font-family:"PingFang SC","Microsoft YaHei",sans-serif}.calendar-box{background:#fff;width:calc(100vw - 16px);max-width:1000px;padding:12px 8px;border-radius:12px;box-shadow:0 5px 20px rgba(0,0,0,.05);flex-direction:column}.has-bg .calendar-box{background:rgba(255,255,255,.6);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)}.has-bg #calendarNameDisplay{text-shadow:0 1px 4px rgba(255,255,255,.8)}.has-bg .cell,.has-bg .empty-cell{background:rgba(255,255,255,.2)!important;border-color:rgba(238,238,238,.6)!important}.header{justify-content:space-between;align-items:center;margin-bottom:10px;padding:0 15px}.title{font-size:16px;color:#4a5568;border-bottom:1px dashed #cbd5e0}.btn{border:none;background:#f0f2f5;width:28px;height:28px;border-radius:50%;align-items:center;justify-content:center}#event-layer,.date-grid,.week-header{display:grid;grid-template-columns:repeat(7,1fr)}.week-header{text-align:center;color:#a0aec0;font-size:10px;margin-bottom:5px}.date-grid{grid-auto-rows:90px;border:1px solid #eee;width:100%}.cell,.empty-cell{background:#fff;padding:2px;border-right:1px solid #eee;border-bottom:1px solid #eee}.date-row{display:flex;align-items:baseline;gap:3px;height:18px;pointer-events:none}#editor-field,.event-bar{flex-direction:column;box-sizing:border-box}.s{font-size:14px;color:#2d3748}.l{font-size:9px;color:#a0aec0;transform:scale(.85);transform-origin:left}#event-layer{position:absolute;width:100%;pointer-events:none;grid-auto-rows:90px}.event-bar{opacity:.8;font-size:11px;padding:2px 4px;border-radius:4px;z-index:10;pointer-events:auto;display:flex!important;line-height:1.1}#yearView{display:none;padding:5px;grid-template-columns:repeat(3,1fr);gap:10px;width:100%;box-sizing:border-box}.year-month-card{border:1px solid #eee;border-radius:8px;padding:8px;background:#fff}.ym-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;margin-top:4px}.ym-day{font-size:8px;text-align:center;height:12px;color:#718096;line-height:9px}.dot-mark{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;pointer-events:none;display:flex;align-items:center;justify-content:center;filter:none!important;border:none!important;box-shadow:0 0 1px .2px rgba(0,0,0,.4),0 1px 2px rgba(0,0,0,.25)!important;opacity:1!important}.dot-mark:not(:empty){width:auto;height:auto;background:0 0!important;box-shadow:none!important;font-size:6.5px;top:7.3px;line-height:1;transform:translateX(-50%) scale(.78);filter:drop-shadow(0 1px 1px rgba(0, 0, 0, .35))!important;-webkit-font-smoothing:antialiased}#modal-overlay{position:fixed;width:100%;background:rgba(0,0,0,.3);z-index:999;display:none}#editor-modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:12px;border-radius:12px;z-index:1000;width:92%;max-width:420px;box-sizing:border-box}.tool-group{display:flex;align-items:center;gap:3px;margin-bottom:8px;flex-wrap:nowrap;overflow-x:auto}.tool-btn{background:#f8fafc;border:1px solid #e2e8f0;min-width:28px;height:26px;border-radius:4px;font-size:11px;display:flex;align-items:center;justify-content:center}.dot{width:14px;height:14px;border-radius:50%;border:1px solid rgba(0,0,0,.05)}#editor-field{width:100%;min-height:120px;max-height:300px;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin:15px 0 8px;outline:0;overflow-y:auto;display:flex;background:#fff}.selected{background-color:#ebf8ff!important;border:1px solid #4299e1!important}.data-btn,.logo-upload-btn{background:#f8fafc;color:#94a3b8;cursor:pointer}.data-btn{font-size:10px;border:1px solid #e2e8f0;border-radius:4px;padding:2px 4px;margin-right:2px}.logo-upload-btn{border:2px dashed #e2e8f0;border-radius:8px;padding:10px;text-align:center;font-size:11px;transition:.2s;display:flex;flex-direction:column;align-items:center;gap:4px;width:100%;box-sizing:border-box}.logo-upload-btn:hover{border-color:#cbd5e0;color:#64748b;background:#f1f5f9}.logo-preview-img{height:32px;width:auto;display:none;margin-bottom:4px;border-radius:4px}.calendar-container div,[id^=cell-]{cursor:default!important}#bg-layer{position:fixed;width:100%;background-color:#fdf6e3;background-size:cover;background-position:center;z-index:-1;filter:blur(var(--bg-blur, 0px)) brightness(var(--bg-bright, 1))!important;-webkit-filter:blur(var(--bg-blur,0px)) brightness(var(--bg-bright,1))!important;transition:filter .3s}#body-tag{filter:none!important}#year-title,.year-header{cursor:pointer;position:relative;z-index:10}.year-month-card{background-color:var(--year-card-bg,rgba(255,255,255,.2))!important;backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);transition:background-color .3s}.year-month-card .month-name,.year-month-card div{color:var(--year-text-color,#333)}.year-month-card>div :not([class*=dot]):not([class*=mark]){background-color:transparent!important}#year-view-container [class*=dot],#year-view-container [class*=mark]{background-color:inherit!important;opacity:1!important;visibility:visible!important;box-shadow:0 0 0 1px #fff,0 1px 3px rgba(0,0,0,.8)!important;z-index:5;filter:brightness(.9) contrast(1.2)}
+        /* 针对调节条的宽度控制 */
+        #blurRange, #bgOpacityRange { width: 80px; min-width: 60px; margin: 0 5px; cursor: pointer; }
+        .style-control-group { display: flex; align-items: center; white-space: nowrap; font-size: 14px; }
+        #bg-layer { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: #fdf6e3; background-size: cover; background-position: center; z-index: -1; transition: 0.5s; }
+        body { margin: 0; padding: 20px 8px; display: flex; justify-content: center; align-items: center; min-height: 100vh; font-family: "PingFang SC", "Microsoft YaHei", sans-serif; box-sizing: border-box; }
+        .calendar-box { background: white; width: calc(100vw - 16px); max-width: 1000px; padding: 12px 8px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); position: relative; box-sizing: border-box; overflow: hidden; display: flex; flex-direction: column; }
+        .has-bg .calendar-box { background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); }
+        .has-bg #calendarNameDisplay {text-shadow: 0 1px 4px rgba(255,255,255,0.8);}
+        .has-bg .cell, .has-bg .empty-cell { background: rgba(255, 255, 255, 0.2) !important; border-color: rgba(238, 238, 238, 0.6) !important; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding: 0 15px; }
+        .title { font-size: 16px; color: #4a5568; font-weight: bold; cursor: pointer; border-bottom: 1px dashed #cbd5e0; }
+        .btn { cursor: pointer; border: none; background: #f0f2f5; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .week-header { display: grid; grid-template-columns: repeat(7, 1fr); text-align: center; color: #a0aec0; font-size: 10px; margin-bottom: 5px; }
+        .date-grid { display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 90px; border: 1px solid #eee; width: 100%; }
+        .cell, .empty-cell { background: white; padding: 2px; border-right: 1px solid #eee; border-bottom: 1px solid #eee; box-sizing: border-box; }
+        .cell { cursor: pointer; position: relative; }
+        .date-row { display: flex; align-items: baseline; gap: 3px; height: 18px; pointer-events: none; }
+        .s { font-size: 14px; color: #2d3748; font-weight: bold; }
+        .l { font-size: 9px; color: #a0aec0; transform: scale(0.85); transform-origin: left; }
+        #event-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: grid; grid-template-columns: repeat(7, 1fr); grid-auto-rows: 90px; }
+        .event-bar { position: relative; opacity: 0.8; font-size: 11px; padding: 2px 4px; border-radius: 4px; z-index: 10; pointer-events: auto; cursor: pointer; display: flex !important; flex-direction: column; overflow: hidden; box-sizing: border-box; line-height: 1.1; }
+        #yearView { display: none; padding: 5px; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; box-sizing: border-box; }
+        .year-month-card { border: 1px solid #eee; border-radius: 8px; padding: 8px; cursor: pointer; background: white; }
+        .ym-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 1px; margin-top: 4px; }
+        /* 针对 .ym-day 的原始设计完全保留 */
+.ym-day { 
+    font-size: 8px; 
+    text-align: center; 
+    height: 12px; 
+    color: #718096; 
+    position: relative; 
+    line-height: 9px; 
+}
+
+/* 1. 【悬浮增强】让圆点既不沉重，又能从背景中跳出来 */
+.dot-mark {
+    position: absolute;
+    top: 9px; 
+    left: 50%;
+    transform: translateX(-50%);
+    
+    width: 4px;       /* 严格保持你的 4px */
+    height: 4px;
+    border-radius: 50%;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    /* 还原最纯正的颜色 */
+    filter: none !important;
+    border: none !important;
+
+    /* --- 核心：双重柔和投影 --- */
+    /* 第一层：0.5px 的半透明深色边缘，负责清晰度 */
+    /* 第二层：2px 的扩散淡影，负责浮空感 */
+    box-shadow: 
+        0 0 1px 0.2px rgba(0, 0, 0, 0.4), 
+        0 1px 2px rgba(0, 0, 0, 0.25) !important;
+    
+    opacity: 1 !important;
+}
+
+/* 2. 【图标悬浮版】针对 Emoji 或 SVG */
+.dot-mark:not(:empty) {
+    width: auto;
+    height: auto;
+    background: transparent !important;
+    box-shadow: none !important; /* 彻底移除容器层面的硬阴影 */
+    
+    font-size: 6.5px; 
+    top: 7.3px; 
+    line-height: 1;
+    transform: translateX(-50%) scale(0.78); 
+    
+    /* --- 核心：轻量级悬浮阴影 --- */
+    /* 这里的 0.35 是透明度，你可以根据感觉微调 */
+    /* 0.5px 的模糊度会让图标边缘看起来很柔和，不生硬 */
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.35)) !important;
+    
+    -webkit-font-smoothing: antialiased;
+}
+
+#modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); z-index: 999; display: none; }
+        #editor-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 12px; border-radius: 12px; z-index: 1000; width: 92%; max-width: 420px; box-sizing: border-box; }
+        .tool-group { display: flex; align-items: center; gap: 3px; margin-bottom: 8px; flex-wrap: nowrap; overflow-x: auto; }
+        .tool-btn { background: #f8fafc; border: 1px solid #e2e8f0; min-width: 28px; height: 26px; border-radius: 4px; cursor: pointer; font-size: 11px; display: flex; align-items: center; justify-content: center; }
+        .dot { width: 14px; height: 14px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.05); cursor: pointer; }
+        #editor-field { width: 100%; min-height: 120px; max-height: 300px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin: 15px 0 8px 0; outline: none; overflow-y: auto; display: flex; flex-direction: column; background: #fff; box-sizing: border-box; }
+        .selected { background-color: #ebf8ff !important; border: 1px solid #4299e1 !important; }
+        .data-btn { font-size: 10px; color: #94a3b8; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 2px 4px; cursor: pointer; margin-right: 2px; }
+        .logo-upload-btn { background: #f8fafc; border: 2px dashed #e2e8f0; color: #94a3b8; border-radius: 8px; padding: 10px; cursor: pointer; text-align: center; font-size: 11px; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; gap: 4px; width: 100%; box-sizing: border-box; }
+        .logo-upload-btn:hover { border-color: #cbd5e0; color: #64748b; background: #f1f5f9; }
+        .logo-preview-img { height: 32px; width: auto; display: none; margin-bottom: 4px; border-radius: 4px; }
+        .calendar-container div, [id^="cell-"] { cursor: default !important; }
+
+/* 【新增】仅针对背景层应用动态滤镜，不影响 body 及弹窗 */
+/* 【修改】确保 CSS 变量能直接控制背景层，且不影响其他元素 */
+#bg-layer {
+    /* 使用 !important 防止被月视图的内联样式或旧样式覆盖 */
+    filter: blur(var(--bg-blur, 0px)) brightness(var(--bg-bright, 1)) !important;
+    -webkit-filter: blur(var(--bg-blur, 0px)) brightness(var(--bg-bright, 1)) !important;
+    transition: filter 0.3s ease;
+}
+
+/* 再次确认：保护 body 不被整体模糊 */
+#body-tag {
+    filter: none !important;
+}
+
+/* 【新增】强制 body 不应用滤镜，防止弹窗变糊 */
+#body-tag {
+    filter: none !important;
+}
+
+/* 【新增】确保年份标题在最上层，方便长按 */
+.year-header, #year-title {
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+}
+
+/* 1. 方块基础样式：这里只用一个最简单的变量控制背景 */
+.year-month-card { 
+    /* 我们统一用 --year-card-bg 这个变量名 */
+    background-color: var(--year-card-bg, rgba(255, 255, 255, 0.2)) !important;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    transition: background-color 0.3s ease;
+}
+
+/* 2. 文字颜色控制 */
+.year-month-card .month-name, 
+.year-month-card div {
+    color: var(--year-text-color, #333);
+}
+
+/* 3. 【核心修正】只让背景容器透明，严禁触碰圆点 */
+/* 这一行会把方块里原本可能存在的白色块去掉，但不影响带 'dot' 的元素 */
+.year-month-card > div *:not([class*="dot"]):not([class*="mark"]) {
+    background-color: transparent !important;
+}
+
+/* 4. 【圆点增强】让圆点变厚重，一眼就能看到 */
+#year-view-container [class*="dot"], 
+#year-view-container [class*="mark"] {
+    background-color: inherit !important; /* 强制保留圆点自己的打卡色 */
+    opacity: 1 !important;
+    visibility: visible !important;
+    /* 增加深色投影和微小白边，确保在任何背景下都不消失 */
+    box-shadow: 0 0 0 1px white, 0 1px 3px rgba(0,0,0,0.8) !important;
+    z-index: 5;
+    /* 稍微加厚一点颜色感 */
+    filter: brightness(0.9) contrast(1.2);
+}
 
     </style>
 </head>
-<body id=body-tag>
-<div id=bg-layer></div>
-<div id=modal-overlay onclick=closeModal()></div>
-<div id=editor-modal>
-<div style=font-size:12px;color:#64748b;margin-bottom:8px;background:#f1f5f9;padding:6px;border-radius:6px>
-范围: <select id=startDaySelect></select> — <select id=endDaySelect></select> 日
+<body id="body-tag">
+    <div id="bg-layer"></div>
+    <div id="modal-overlay" onclick="closeModal()"></div>
+    
+    <div id="editor-modal">
+        <div style="font-size: 12px; color: #64748b; margin-bottom: 8px; background: #f1f5f9; padding: 6px; border-radius: 6px;">
+            范围: <select id="startDaySelect"></select> — <select id="endDaySelect"></select> 日
+        </div>
+        <div class="tool-group">
+            <button class="tool-btn" onmousedown="exec(event,'bold')">B</button>
+            <button class="tool-btn" onmousedown="exec(event,'italic')">I</button>
+            <button class="tool-btn" onmousedown="exec(event,'underline')">U</button>
+            <div style="width:1px;height:14px;background:#ddd"></div>
+            <div class="dot" style="background:#E67E92" onmousedown="setStyle(event,'color','#E67E92')"></div> 
+<div class="dot" style="background:#D97706" onmousedown="setStyle(event,'color','#D97706')"></div> 
+<div class="dot" style="background:#F59E0B" onmousedown="setStyle(event,'color','#F59E0B')"></div> 
+<div class="dot" style="background:#10B981" onmousedown="setStyle(event,'color','#10B981')"></div> 
+<div class="dot" style="background:#059669" onmousedown="setStyle(event,'color','#059669')"></div> 
+<div class="dot" style="background:#3B82F6" onmousedown="setStyle(event,'color','#3B82F6')"></div> 
+<div class="dot" style="background:#8B5CF6" onmousedown="setStyle(event,'color','#8B5CF6')"></div> 
+<div class="dot" style="background:#5D4037" onmousedown="setStyle(event,'color','#5D4037')"></div> 
+<div class="dot" style="background:#475569" onmousedown="setStyle(event,'color','#475569')"></div>
+            <div class="dot" style="background:#5D4037" onmousedown="setStyle(event,'color','#5D4037')"></div> 
+            <div class="dot" style="background:#475569" onmousedown="setStyle(event,'color','#475569')"></div> 
+            <div class="dot" style="background:#1E3A8A" onmousedown="setStyle(event,'color','#1E3A8A')"></div> 
+            <div class="dot" style="background:#064E3B" onmousedown="setStyle(event,'color','#064E3B')"></div> 
+            <div class="dot" style="background:#853B3B" onmousedown="setStyle(event,'color','#853B3B')"></div>
+            <div class="dot" style="background:#8C7355" onmousedown="setStyle(event,'color','#8C7355')"></div> 
+            <div class="dot" style="background:#4A4352" onmousedown="setStyle(event,'color','#4A4352')"></div> 
+            <div class="dot" style="background:#64748B" onmousedown="setStyle(event,'color','#64748B')"></div> 
+            <div class="dot" style="background:#000" onmousedown="setStyle(event,'color','#000')"></div> 
+            <div class="dot" style="background:#fff;border:1px solid #ddd" onmousedown="setStyle(event,'color','#fff')"></div> 
+        </div>
+        <div class="tool-group">
+            <button class="tool-btn" onmousedown="setStyle(event,'fontSize','14px')">小</button>
+            <button class="tool-btn" onmousedown="setStyle(event,'fontSize','20px')">中</button>
+            <button class="tool-btn" onmousedown="setStyle(event,'fontSize','28px')">大</button>
+            <button class="tool-btn" onmousedown="setStyle(event,'fontSize','36px')">特</button>
+            <button class="tool-btn" onmousedown="setStyle(event,'fontSize','42px')">巨</button>
+            <div style="width:1px;height:14px;background:#ddd"></div>
+            <button class="tool-btn" onmousedown="exec(event,'justifyLeft')">←</button>
+            <button class="tool-btn" onmousedown="exec(event,'justifyCenter')">↔</button>
+            <button class="tool-btn" onmousedown="exec(event,'justifyRight')">→</button>
+            <div style="width:1px;height:14px;background:#ddd"></div>
+            <button class="tool-btn" onmousedown="setAlign(event,'flex-start')">↑</button>
+            <button class="tool-btn" onmousedown="setAlign(event,'center')">↕</button>
+            <button class="tool-btn" onmousedown="setAlign(event,'flex-end')">↓</button>
+        </div>
+        <div class="tool-group">
+    <span style="font-size:10px;color:#999">底色:</span>
+    <div class="dot" style="background:#FFD1DC" onclick="setBarColor('#FFD1DC')"></div>
+    <div class="dot" style="background:#FFD6A5" onclick="setBarColor('#FFD6A5')"></div>
+    <div class="dot" style="background:#FFF3BF" onclick="setBarColor('#FFF3BF')"></div>
+    <div class="dot" style="background:#B9F3E4" onclick="setBarColor('#B9F3E4')"></div>
+    <div class="dot" style="background:#B2F2BB" onclick="setBarColor('#B2F2BB')"></div>
+    <div class="dot" style="background:#CFEEFF" onclick="setBarColor('#CFEEFF')"></div>
+    <div class="dot" style="background:#A5D8FF" onclick="setBarColor('#A5D8FF')"></div>
+    <div class="dot" style="background:#E5DBFF" onclick="setBarColor('#E5DBFF')"></div>
+    <div class="dot" style="background:#E2C2C6" onclick="setBarColor('#E2C2C6')"></div>
+   <div class="dot" style="background:#A8D1D1" onclick="setBarColor('#A8D1D1')"></div>
+   <div class="dot" style="background:#EADBC8" onclick="setBarColor('#EADBC8')"></div>
+   <div class="dot" style="background:#C7B9D7" onclick="setBarColor('#C7B9D7')"></div>
+   <div class="dot" style="background:#f1f5f9;border:1px solid #ddd" onclick="setBarColor('#f1f5f9')"></div>
+   <div class="dot" style="background:rgba(255, 255, 255, 0.4); border:1px solid rgba(255,255,255,0.6);" 
+     onclick="setBarColor('rgba(255, 255, 255, 0.4)')"></div>
+    <div class="dot" style="background:transparent; border:1px dashed #aaa; display:flex; align-items:center; justify-content:center; font-size:9px; color:#999;" onclick="setBarColor('transparent')">透</div>
 </div>
-<div class=tool-group>
-<button class=tool-btn onmousedown='exec(event,"bold")'>B</button>
-<button class=tool-btn onmousedown='exec(event,"italic")'>I</button>
-<button class=tool-btn onmousedown='exec(event,"underline")'>U</button>
-<div style=width:1px;height:14px;background:#ddd></div>
-<div class=dot style=background:#e67e92 onmousedown='setStyle(event,"color","#E67E92")'></div>
-<div class=dot style=background:#d97706 onmousedown='setStyle(event,"color","#D97706")'></div>
-<div class=dot style=background:#f59e0b onmousedown='setStyle(event,"color","#F59E0B")'></div>
-<div class=dot style=background:#10b981 onmousedown='setStyle(event,"color","#10B981")'></div>
-<div class=dot style=background:#059669 onmousedown='setStyle(event,"color","#059669")'></div>
-<div class=dot style=background:#3b82f6 onmousedown='setStyle(event,"color","#3B82F6")'></div>
-<div class=dot style=background:#8b5cf6 onmousedown='setStyle(event,"color","#8B5CF6")'></div>
-<div class=dot style=background:#5d4037 onmousedown='setStyle(event,"color","#5D4037")'></div>
-<div class=dot style=background:#475569 onmousedown='setStyle(event,"color","#475569")'></div>
-<div class=dot style=background:#5d4037 onmousedown='setStyle(event,"color","#5D4037")'></div>
-<div class=dot style=background:#475569 onmousedown='setStyle(event,"color","#475569")'></div>
-<div class=dot style=background:#1e3a8a onmousedown='setStyle(event,"color","#1E3A8A")'></div>
-<div class=dot style=background:#064e3b onmousedown='setStyle(event,"color","#064E3B")'></div>
-<div class=dot style=background:#853b3b onmousedown='setStyle(event,"color","#853B3B")'></div>
-<div class=dot style=background:#8c7355 onmousedown='setStyle(event,"color","#8C7355")'></div>
-<div class=dot style=background:#4a4352 onmousedown='setStyle(event,"color","#4A4352")'></div>
-<div class=dot style=background:#64748b onmousedown='setStyle(event,"color","#64748B")'></div>
-<div class=dot style=background:#000 onmousedown='setStyle(event,"color","#000")'></div>
-<div class=dot style="background:#fff;border:1px solid #ddd" onmousedown='setStyle(event,"color","#fff")'></div>
+        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">日历标题 (展示在色块条上):</div>
+        <div id="editor-title" contenteditable="true" placeholder="写个标题..." style="min-height: 40px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-top: 45px; /* 👈 加上这一句，把工具栏推开 */ margin-bottom: 12px; background: #fff; overflow-y: auto;"></div>
+
+        <div style="font-size: 11px; color: #94a3b8; margin-bottom: 4px;">备注详情 (点击色块后查看):</div>
+        <div id="editor-field" contenteditable="true" placeholder="写点详细内容..." style="min-height: 100px; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px; margin-bottom: 15px; background: #fff; overflow-y: auto;"></div>
+        
+        <div style="display:flex; justify-content: space-between; align-items: center; border-top:1px solid #eee; padding-top:10px;">
+            <div>
+                <button id="delBtn" style="color:#e53e3e;background:none;border:none;font-size:10px;cursor:pointer" onclick="deleteEvent()">删除</button>
+                <button class="data-btn" onclick="exportData()">备份</button>
+                <button class="data-btn" onclick="importData()">还原</button>
+                <button class="data-btn" onclick="changeBg()">背景</button>
+            </div>
+            <button style="background:#4fd1c5;color:white;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-weight:bold" onclick="saveEvent()">保存</button>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; font-size:10px; color:#94a3b8; margin-top:8px; border-top:1px dashed #eee; padding-top:8px;">
+            <span>日历透明度</span>
+            <input type="range" id="bgOpacityRange" min="0" max="1" step="0.1" oninput="updateBgOpacity(this.value)">
+            <span id="opVal">0.5</span>
+            <span>背景模糊度</span>
+            <input type="range" id="blurRange" min="0" max="25" step="1" oninput="updateBlur(this.value)">
+            <span id="blVal">4</span>
+        </div>
+    </div>
+
+    <div class="calendar-box" id="mainBox">
+        <div id="calendar-title-container" style="display: flex; align-items: center; justify-content: center; padding: 15px 10px 5px 10px; min-height: 48px; position: relative;">
+            <div id="logo-wrapper" style="flex: 1; display: flex; justify-content: flex-end; padding-right: 12px;">
+                <img id="calendarLogoDisplay" src="" style="display: none; height: 40px; width: auto; max-width: 120px; cursor: pointer;" ondblclick="openNameModal()">
+            </div>
+            <div id="calendarNameDisplay" style="cursor: pointer; font-size: 18px; font-weight: bold; color: #2d3748; white-space: nowrap; user-select: none; text-align: center;" ondblclick="openNameModal()">
+                我的日历
+            </div>
+            <div id="logo-placeholder" style="flex: 1;"></div>
+        </div>
+
+        <div id="name-modal" style="display:none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; padding: 20px; border-radius: 12px; z-index: 1001; width: 85%; max-width: 320px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+            <h3 style="margin-top:0; font-size: 15px; color: #64748b;">设置日历标题</h3>
+            <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">日历 Logo：</div>
+            <div class="tool-group" style="margin-bottom: 15px; flex-direction: column; align-items: flex-start;">
+                <div id="logoUploadArea" class="logo-upload-btn" onclick="triggerLogoUpload()">
+                    <img id="logoEditPreview" src="" class="logo-preview-img">
+                    <span id="logoUploadText">点击上传 LOGO 图片</span>
+                </div>
+                <button id="delLogoBtn" style="color:#e53e3e;background:none;border:none;font-size:10px;cursor:pointer;display:none;padding: 0 4px;" onclick="deleteLogo()">删除 LOGO</button>
+            </div>
+            <input type="text" id="nameEditInput" placeholder="输入标题..." style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; margin-bottom: 15px; outline: none; font-size: 16px;">
+            
+            <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">文字颜色：</div>
+            <div class="tool-group" style="margin-bottom: 15px;">
+                <div class="dot" style="background:#2d3748" onclick="setTitleStyle('color','#2d3748')"></div>
+                <div class="dot" style="background:#e53e3e" onclick="setTitleStyle('color','#e53e3e')"></div>
+                <div class="dot" style="background:#3182ce" onclick="setTitleStyle('color','#3182ce')"></div>
+                <div class="dot" style="background:#38a169" onclick="setTitleStyle('color','#38a169')"></div>
+                <div class="dot" style="background:#d69e2e" onclick="setTitleStyle('color','#d69e2e')"></div>
+                <div class="dot" style="background:#805ad5" onclick="setTitleStyle('color','#805ad5')"></div>
+            </div>
+
+            <div style="font-size: 12px; color: #94a3b8; margin-bottom: 8px;">字体大小：</div>
+            <div class="tool-group" style="margin-bottom: 20px;">
+                <button class="tool-btn" onclick="setTitleStyle('fontSize','16px')">小</button>
+                <button class="tool-btn" onclick="setTitleStyle('fontSize','22px')">中</button>
+                <button class="tool-btn" onclick="setTitleStyle('fontSize','28px')">大</button>
+                <button class="tool-btn" onclick="setTitleStyle('fontSize','36px')">特</button>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid #f1f5f9; padding-top: 15px;">
+                <button onclick="closeNameModal()" style="background:#f8fafc; border:1px solid #e2e8f0; padding:8px 16px; border-radius:6px; cursor:pointer; font-size:13px;">取消</button>
+                <button onclick="dbSaveCalendarName()" style="background:#4fd1c5; color:white; border:none; padding:8px 20px; border-radius:6px; cursor:pointer; font-weight:bold; font-size:13px;">保存全部</button>
+            </div>
+        </div>
+
+        <div class="header">
+    <button id="prevBtn" class="btn" onclick="changeMonth(-1)">‹</button>
+    
+    <div id="monthDisplay" class="title" onclick="toggleView()"></div>
+    
+    <button id="nextBtn" class="btn" onclick="changeMonth(1)">›</button>
 </div>
-<div class=tool-group>
-<button class=tool-btn onmousedown='setStyle(event,"fontSize","14px")'>小</button>
-<button class=tool-btn onmousedown='setStyle(event,"fontSize","20px")'>中</button>
-<button class=tool-btn onmousedown='setStyle(event,"fontSize","28px")'>大</button>
-<button class=tool-btn onmousedown='setStyle(event,"fontSize","36px")'>特</button>
-<button class=tool-btn onmousedown='setStyle(event,"fontSize","42px")'>巨</button>
-<div style=width:1px;height:14px;background:#ddd></div>
-<button class=tool-btn onmousedown='exec(event,"justifyLeft")'>←</button>
-<button class=tool-btn onmousedown='exec(event,"justifyCenter")'>↔</button>
-<button class=tool-btn onmousedown='exec(event,"justifyRight")'>→</button>
-<div style=width:1px;height:14px;background:#ddd></div>
-<button class=tool-btn onmousedown='setAlign(event,"flex-start")'>↑</button>
-<button class=tool-btn onmousedown='setAlign(event,"center")'>↕</button>
-<button class=tool-btn onmousedown='setAlign(event,"flex-end")'>↓</button>
-</div>
-<div class=tool-group>
-<span style=font-size:10px;color:#999>底色:</span>
-<div class=dot style=background:#ffd1dc onclick='setBarColor("#FFD1DC")'></div>
-<div class=dot style=background:#ffd6a5 onclick='setBarColor("#FFD6A5")'></div>
-<div class=dot style=background:#fff3bf onclick='setBarColor("#FFF3BF")'></div>
-<div class=dot style=background:#b9f3e4 onclick='setBarColor("#B9F3E4")'></div>
-<div class=dot style=background:#b2f2bb onclick='setBarColor("#B2F2BB")'></div>
-<div class=dot style=background:#cfeeff onclick='setBarColor("#CFEEFF")'></div>
-<div class=dot style=background:#a5d8ff onclick='setBarColor("#A5D8FF")'></div>
-<div class=dot style=background:#e5dbff onclick='setBarColor("#E5DBFF")'></div>
-<div class=dot style=background:#e2c2c6 onclick='setBarColor("#E2C2C6")'></div>
-<div class=dot style=background:#a8d1d1 onclick='setBarColor("#A8D1D1")'></div>
-<div class=dot style=background:#eadbc8 onclick='setBarColor("#EADBC8")'></div>
-<div class=dot style=background:#c7b9d7 onclick='setBarColor("#C7B9D7")'></div>
-<div class=dot style="background:#f1f5f9;border:1px solid #ddd" onclick='setBarColor("#f1f5f9")'></div>
-<div class=dot style="background:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.6)" onclick='setBarColor("rgba(255, 255, 255, 0.4)")'></div>
-<div class=dot style="background:0 0;border:1px dashed #aaa;display:flex;align-items:center;justify-content:center;font-size:9px;color:#999" onclick='setBarColor("transparent")'>透</div>
-</div>
-<div style=font-size:11px;color:#94a3b8;margin-bottom:4px>日历标题 (展示在色块条上):</div>
-<div id=editor-title contenteditable=true placeholder=写个标题... style="min-height:40px;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-top:45px;margin-bottom:12px;background:#fff;overflow-y:auto"></div>
-<div style=font-size:11px;color:#94a3b8;margin-bottom:4px>备注详情 (点击色块后查看):</div>
-<div id=editor-field contenteditable=true placeholder=写点详细内容... style="min-height:100px;border:1px solid #e2e8f0;border-radius:8px;padding:10px;margin-bottom:15px;background:#fff;overflow-y:auto"></div>
-<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;padding-top:10px">
-<div>
-<button id=delBtn style="color:#e53e3e;background:0 0;border:none;font-size:10px;cursor:pointer" onclick=deleteEvent()>删除</button>
-<button class=data-btn onclick=exportData()>备份</button>
-<button class=data-btn onclick=importData()>还原</button>
-<button class=data-btn onclick=changeBg()>背景</button>
-</div>
-<button style="background:#4fd1c5;color:#fff;border:none;padding:8px 24px;border-radius:6px;cursor:pointer;font-weight:700" onclick=saveEvent()>保存</button>
-</div>
-<div style="display:flex;align-items:center;gap:8px;font-size:10px;color:#94a3b8;margin-top:8px;border-top:1px dashed #eee;padding-top:8px">
-<span>日历透明度</span>
-<input type=range id=bgOpacityRange min=0 max=1 step=0.1 oninput=updateBgOpacity(this.value)>
-<span id=opVal>0.5</span>
-<span>背景模糊度</span>
-<input type=range id=blurRange min=0 max=25 step=1 oninput=updateBlur(this.value)>
-<span id=blVal>4</span>
-</div>
-</div>
-<div class=calendar-box id=mainBox>
-<div id=calendar-title-container style="display:flex;align-items:center;justify-content:center;padding:15px 10px 5px 10px;min-height:48px;position:relative">
-<div id=logo-wrapper style=flex:1;display:flex;justify-content:flex-end;padding-right:12px>
-<img id=calendarLogoDisplay src="" style=display:none;height:40px;width:auto;max-width:120px;cursor:pointer ondblclick=openNameModal()>
-</div>
-<div id=calendarNameDisplay style=cursor:pointer;font-size:18px;font-weight:700;color:#2d3748;white-space:nowrap;user-select:none;text-align:center ondblclick=openNameModal()>
-我的日历
-</div>
-<div id=logo-placeholder style=flex:1></div>
-</div>
-<div id=name-modal style="display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#fff;padding:20px;border-radius:12px;z-index:1001;width:85%;max-width:320px;box-shadow:0 10px 25px rgba(0,0,0,.1)">
-<h3 style=margin-top:0;font-size:15px;color:#64748b>设置日历标题</h3>
-<div style=font-size:12px;color:#94a3b8;margin-bottom:8px>日历 Logo：</div>
-<div class=tool-group style=margin-bottom:15px;flex-direction:column;align-items:flex-start>
-<div id=logoUploadArea class=logo-upload-btn onclick=triggerLogoUpload()>
-<img id=logoEditPreview src="" class=logo-preview-img>
-<span id=logoUploadText>点击上传 LOGO 图片</span>
-</div>
-<button id=delLogoBtn style="color:#e53e3e;background:0 0;border:none;font-size:10px;cursor:pointer;display:none;padding:0 4px" onclick=deleteLogo()>删除 LOGO</button>
-</div>
-<input id=nameEditInput placeholder=输入标题... style="width:100%;padding:10px;border:1px solid #e2e8f0;border-radius:8px;margin-bottom:15px;outline:0;font-size:16px">
-<div style=font-size:12px;color:#94a3b8;margin-bottom:8px>文字颜色：</div>
-<div class=tool-group style=margin-bottom:15px>
-<div class=dot style=background:#2d3748 onclick='setTitleStyle("color","#2d3748")'></div>
-<div class=dot style=background:#e53e3e onclick='setTitleStyle("color","#e53e3e")'></div>
-<div class=dot style=background:#3182ce onclick='setTitleStyle("color","#3182ce")'></div>
-<div class=dot style=background:#38a169 onclick='setTitleStyle("color","#38a169")'></div>
-<div class=dot style=background:#d69e2e onclick='setTitleStyle("color","#d69e2e")'></div>
-<div class=dot style=background:#805ad5 onclick='setTitleStyle("color","#805ad5")'></div>
-</div>
-<div style=font-size:12px;color:#94a3b8;margin-bottom:8px>字体大小：</div>
-<div class=tool-group style=margin-bottom:20px>
-<button class=tool-btn onclick='setTitleStyle("fontSize","16px")'>小</button>
-<button class=tool-btn onclick='setTitleStyle("fontSize","22px")'>中</button>
-<button class=tool-btn onclick='setTitleStyle("fontSize","28px")'>大</button>
-<button class=tool-btn onclick='setTitleStyle("fontSize","36px")'>特</button>
-</div>
-<div style="display:flex;justify-content:flex-end;gap:10px;border-top:1px solid #f1f5f9;padding-top:15px">
-<button onclick=closeNameModal() style="background:#f8fafc;border:1px solid #e2e8f0;padding:8px 16px;border-radius:6px;cursor:pointer;font-size:13px">取消</button>
-<button onclick=dbSaveCalendarName() style="background:#4fd1c5;color:#fff;border:none;padding:8px 20px;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px">保存全部</button>
-</div>
-</div>
-<div class=header>
-<button id=prevBtn class=btn onclick=changeMonth(-1)>‹</button>
-<div id=monthDisplay class=title onclick=toggleView()></div>
-<button id=nextBtn class=btn onclick=changeMonth(1)>›</button>
-</div>
-<div id=monthView>
-<div class=week-header><div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div></div>
-<div style=position:relative>
-<div id=dateGrid class=date-grid></div>
-<div id=event-layer></div>
-</div>
-</div>
-<div id=yearView></div>
-<div id=adminTrigger style=text-align:center;font-size:10px;color:#a0aec0;margin-top:15px;cursor:pointer>© 2026 🤿宇宙级潜水员🐟 版权所有</div>
-</div>
-<div id=noteDetailModal onclick=closeNoteModal() style=display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.1);z-index:10000;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px)>
-<div onclick=event.stopPropagation() style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:85%;max-width:300px;background:rgba(255,255,255,.7);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 10px 30px rgba(0,0,0,.1);animation:popScale .3s cubic-bezier(.34,1.56,.64,1);display:flex;flex-direction:column;border-radius:25px;border:1px solid rgba(255,255,255,.4);padding:25px">
-<div style=text-align:center;margin-bottom:15px>
-<div style="width:40px;height:4px;background:rgba(0,0,0,.1);border-radius:10px;margin:0 auto 15px"></div>
-<span style=font-size:16px;font-weight:600;color:#333;letter-spacing:1px>详情</span>
-</div>
-<div id=noteDetailContent style="max-height:50vh;overflow-y:auto;line-height:1.6;color:#444;font-size:15px;padding:0 5px;display:flex;flex-direction:column"></div>
-<div onclick=closeNoteModal() style=margin-top:20px;padding:10px;text-align:center;color:#007aff;font-size:14px;font-weight:500;cursor:pointer>好</div>
-</div>
-</div></body>
+
+        <div id="monthView">
+            <div class="week-header"><div>日</div><div>一</div><div>二</div><div>三</div><div>四</div><div>五</div><div>六</div></div>
+            <div style="position:relative">
+                <div id="dateGrid" class="date-grid"></div>
+                <div id="event-layer"></div>
+            </div>
+        </div>
+        <div id="yearView"></div>
+        <div id="adminTrigger" style="text-align:center;font-size:10px;color:#a0aec0;margin-top:15px;cursor:pointer">© 2026 🤿宇宙级潜水员🐟 版权所有</div>
+    </div>
+
+    <div id="noteDetailModal" onclick="closeNoteModal()" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.1); z-index:10000; backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);">
+        <div onclick="event.stopPropagation()" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); width:85%; max-width:300px; background:rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); animation: popScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); display:flex; flex-direction:column; border-radius: 25px; border: 1px solid rgba(255,255,255,0.4); padding: 25px;">
+            <div style="text-align: center; margin-bottom: 15px;">
+                <div style="width: 40px; height: 4px; background: rgba(0,0,0,0.1); border-radius: 10px; margin: 0 auto 15px;"></div>
+                <span style="font-size:16px; font-weight:600; color:#333; letter-spacing: 1px;">详情</span>
+            </div>
+            <div id="noteDetailContent" style="max-height:50vh; overflow-y:auto; line-height:1.6; color:#444; font-size:15px; padding: 0 5px; display: flex; flex-direction: column;"></div>
+            <div onclick="closeNoteModal()" style="margin-top:20px; padding: 10px; text-align:center; color:#007AFF; font-size:14px; font-weight: 500; cursor: pointer;">好</div>
+        </div>
+    </div>
 
     <script>
-const _0x347be7=_0x5e14;(function(_0x1ee427,_0x3b2007){const _0x4e6683=_0x5e14,_0x2978b6=_0x1ee427();while(!![]){try{const _0x368a6b=-parseInt(_0x4e6683(0x203))/0x1+-parseInt(_0x4e6683(0x210))/0x2*(-parseInt(_0x4e6683(0x1e7))/0x3)+-parseInt(_0x4e6683(0x1e0))/0x4+parseInt(_0x4e6683(0x262))/0x5*(-parseInt(_0x4e6683(0x2c6))/0x6)+parseInt(_0x4e6683(0x205))/0x7+-parseInt(_0x4e6683(0x2c9))/0x8+parseInt(_0x4e6683(0x26d))/0x9;if(_0x368a6b===_0x3b2007)break;else _0x2978b6['push'](_0x2978b6['shift']());}catch(_0x4f5dde){_0x2978b6['push'](_0x2978b6['shift']());}}}(_0x23d9,0xc2f0f));const S_URL=_0x347be7(0x1b5),S_KEY='sb_publishable_8lKRoBeyMpq8UEYugqvn7g_3_iImIur',_db=supabase[_0x347be7(0x267)](S_URL,S_KEY);function getCacheKey(_0x31ff94){const _0x364a04=S_URL['split']('.')[0x0]['split']('//')[0x1]||'default';return _0x364a04+'_'+_0x31ff94;}function _0x23d9(){const _0x2ffb36=['getRangeAt','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22padding-bottom:\x2015px;\x20margin-bottom:\x2015px;\x20border-bottom:\x201px\x20dashed\x20rgba(0,0,0,0.1);\x20width:100%;\x20font-weight:bold;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','初始化同步略过','onmouseup','onchange','rgb(','#cbd5e0','云端保存失败:','上传失败：','savedP','split','yearCardAlphaInp','toBlob','删除失败：','getPublicUrl','barColor','请输入管理员暗号：','selected','floor','rgba(255,\x20255,\x20255,\x20','event-bar','⚠️\x20请先验证管理员身份','stringify','click','canvas','1.2','length','numeric','color','getSelection','bg_opacity','includes','<div\x20class=\x22empty-cell\x22></div>','div','getDay','style','blur','yearView','opacity','.json','_year','brightness','<div\x20class=\x22dot-mark\x22\x20style=\x22color:','flexDirection','event-layer','nextBtn','end','monthView','blur(','monthDisplay','function','image/gif','云端配置同步成功\x20✨','#2d3748','拦截：年视图显示中，拒绝加载月背景','请先解锁','admin_temp_pass','month','暗号错误','getElementById','readAsDataURL','block','justifyRight','removeItem','format','点击更换\x20LOGO','start','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','加载年背景失败',';\x20text-shadow:\x200\x200\x202px\x20#fff;\x20font-weight:\x20bold;\x22>','getItem','<option\x20value=\x22','.year-header','configs','2196XbJqIW','content','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<a\x20href=\x22','2310832rIdkuf','#B2F2BB','年\x20全览','🚫\x20云端保存失败：',';\x22></div>','className','删除失败:','解锁成功\x20🔐','renderGuestDetail','❌\x20保存失败，请检查网络或权限','year-month-card','<div\x20style=\x22display:flex;\x20flex-direction:column;\x20width:100%;\x20height:100%;\x20justify-content:','18px','cell-','filter','match','closeNoteModal','documentElement','createObjectURL','input','\x22><div\x20class=\x22date-row\x22><span\x20class=\x22s\x22>','min','我的日历','inherit','gif','确定要删除这条日程吗？','width','onclick','innerText','calendarNameDisplay','flex','none','from','setProperty','global_calendar_name','https://cnbarxcyhtuyympqwspb.supabase.co','背景加载略过','maybeSingle','未找到年标题元素，请确认标题的\x20class\x20或\x20ID\x20是否匹配','secure_upsert_event','createElement','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20style=\x22font-size:\x2013px;\x20color:\x20#888;\x20margin-bottom:\x2012px;\x20text-align:center;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20📅\x20','some','保存失败详情:','管理员模式已注销\x20🔒','trim','select','yearTextBrightInp','adminTrigger','alignItems','</option>','drawImage','calendarLogoDisplay','backgroundColor','justifyCenter','row','logo','#f1f5f9','flex-start','setItem','bg_','reload','classList','setMonth','已自动跳转至当前月份','<div\x20class=\x22ym-day\x22></div>','🚫\x20保存失败：','yearUploadBtn','nameEditInput','preventDefault','ontouchstart','body-tag','innerHTML','name-modal','准备保存配置:','remove','inline-block','opacityInput','3240644YfnKXX','正在上传...','querySelectorAll','textAlign','jpg','📅\x20跳转日期\x20(格式\x202026.5):','parse','3271245gdHddX','DateTimeFormat','column','customCalendarNameData','onmousedown','col','matchAll','endDaySelect','activeElement','--blur','请先验证身份','oncontextmenu','url(\x27','grid','addEventListener','admin_auth_data','delLogoBtn','--year-card-bg','stretch','删除成功\x20🗑️','loginTime','readAsText','getDate','setFullYear','fontSize','原样上传模式','getFullYear','add','1371409yHZKKp','请点击底部©解锁权限','7330372SBWvqZ','zh-u-ca-chinese','load','image/jpeg','log','execCommand','getMonth','getContext','removeEventListener','isAdmin','gridColumn','2BfIGsU','calendar-container','editor-field','#3b82f6','upload','string','#475569','calendar_backup.json','opVal','双击设置日历名称','🔒\x20请先解锁管理员权限','blVal','bg-layer','✅\x20上传成功','cardAlpha','find','now','justifyContent','\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</div>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<div\x20class=\x22note-detail-body\x22\x20style=\x22text-align:\x20left;\x20width:\x20100%;\x20min-height:\x2080px;\x20line-height:\x201.6;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20','onload','div[style*=\x22display:flex\x22]','overflow','rpc','logoEditPreview','image/png','editor-title','appendChild','🏖️','display','stopPropagation','onmouseleave','modal-overlay','noteDetailModal','year-admin-modal','long','removeAllRanges','src','map','<div\x20class=\x22dot-mark\x22\x20style=\x22background:','secure_update_config_item','style_','</div>','year','rangeCount','transparent','文件解析失败，请确保是有效的备份文件。','blurRange','px)','extractContents','forEach','同步失败:','<span\x20style=\x22color:#bbb;\x20font-style:italic;\x22>(\x20暂无详细内容\x20)</span>','result','找不到\x20ID\x20为\x20adminTrigger\x20的隐藏区域，请检查\x20HTML\x20中是否有这个\x20ID','标题加载完成','yearBrightInp','max','secure_delete_event','left','_year_config','type','calendar-assets',';\x20align-items:stretch;\x22>','--bg-opacity','file','target','--bg-bright','backgroundImage','ontouchend','text','monthStyles','accept','--year-text-color','yearBlurInp','.cell','image/*','null','error','无标题','height','valBlur','year-title','12545pSoVTr','defineProperty','editor-modal','bgOpacityRange','valBright','createClient','--bg-blur','querySelector','message','span','startDaySelect','18446274hdIZQI','月</div><div\x20class=\x22ym-grid\x22>','hidden','value','同步失败一条:','files','storage','undefined','observe','application/json','gridRow','.year-month-card','body','size','✅\x20年视图设置已成功保存！'];_0x23d9=function(){return _0x2ffb36;};return _0x23d9();}let currentDate=new Date(),viewMode=_0x347be7(0x2b5),selection=[],currentBarColor='#B2F2BB',editingId=null,events=[];const checkAuth=()=>{const _0x21b989=_0x347be7;try{let _0x4ab64f=sessionStorage['getItem'](_0x21b989(0x2b4));const _0x2f8846=localStorage['getItem'](_0x21b989(0x1f6));if(_0x2f8846){const _0x4d325c=JSON[_0x21b989(0x1e6)](_0x2f8846);if(Date['now']()-_0x4d325c[_0x21b989(0x1fb)]<0x5265c00)return!_0x4ab64f&&_0x4d325c[_0x21b989(0x285)]&&(_0x4ab64f=atob(_0x4d325c[_0x21b989(0x285)]),sessionStorage[_0x21b989(0x1cd)]('admin_temp_pass',_0x4ab64f),console['log']('检测到有效的本地授权，已自动恢复暗号状态')),!![];else localStorage[_0x21b989(0x2bb)](_0x21b989(0x1f6));}return!!_0x4ab64f;}catch(_0x439805){return![];}};Object[_0x347be7(0x263)](window,_0x347be7(0x20e),{'get':function(){return checkAuth();},'configurable':!![]}),window[_0x347be7(0x1f5)](_0x347be7(0x207),()=>{const _0x857bf8=_0x347be7,_0x155aa4=document['getElementById'](_0x857bf8(0x1c2));let _0x14f073=0x0;_0x155aa4?_0x155aa4[_0x857bf8(0x2e4)]=()=>{const _0xe249b2=_0x857bf8;if(++_0x14f073>=0x5){if(window['isAdmin'])sessionStorage[_0xe249b2(0x2bb)](_0xe249b2(0x2b4)),localStorage[_0xe249b2(0x2bb)](_0xe249b2(0x1f6)),alert(_0xe249b2(0x1be)),location[_0xe249b2(0x1cf)]();else{const _0x5be09a=prompt(_0xe249b2(0x28c));_0x5be09a&&(sessionStorage[_0xe249b2(0x1cd)](_0xe249b2(0x2b4),_0x5be09a),localStorage[_0xe249b2(0x1cd)](_0xe249b2(0x1f6),JSON[_0xe249b2(0x292)]({'is_admin':!![],'loginTime':Date[_0xe249b2(0x220)](),'savedP':btoa(_0x5be09a)})),alert(_0xe249b2(0x2d0)),location['reload']());}_0x14f073=0x0;}}:console[_0x857bf8(0x25d)](_0x857bf8(0x245));});function updateBlur(_0x8d7e2e){const _0x6fd2eb=_0x347be7,_0x51a465=document[_0x6fd2eb(0x2b7)]('bg-layer');if(_0x51a465)_0x51a465[_0x6fd2eb(0x29f)][_0x6fd2eb(0x2d7)]=_0x6fd2eb(0x2ac)+_0x8d7e2e+_0x6fd2eb(0x23f);const _0x33fbde=document['getElementById'](_0x6fd2eb(0x21b));if(_0x33fbde)_0x33fbde[_0x6fd2eb(0x2e5)]=_0x8d7e2e;saveMonthStyle(_0x6fd2eb(0x2a0),_0x8d7e2e);}function updateBgOpacity(_0x11be30){const _0x48255f=_0x347be7,_0x1abb0c=document[_0x48255f(0x2b7)](_0x48255f(0x21c));if(_0x1abb0c)_0x1abb0c[_0x48255f(0x29f)][_0x48255f(0x2a2)]=_0x11be30;const _0x29777f=document['getElementById']('opVal');if(_0x29777f)_0x29777f['innerText']=_0x11be30;saveMonthStyle(_0x48255f(0x2a2),_0x11be30);}async function saveMonthStyle(_0x3f8a01,_0x2a7a0a){const _0x5867dc=_0x347be7,_0x1ba79e=currentDate[_0x5867dc(0x201)](),_0x2c5339=currentDate[_0x5867dc(0x20b)](),_0x162f90=_0x1ba79e+'-'+_0x2c5339,_0x5b5dfc=_0x5867dc(0x238)+_0x162f90;if(_0x3f8a01==='blur')document['documentElement'][_0x5867dc(0x29f)]['setProperty'](_0x5867dc(0x1f0),_0x2a7a0a+'px');if(_0x3f8a01===_0x5867dc(0x2a2))document[_0x5867dc(0x2da)][_0x5867dc(0x29f)]['setProperty'](_0x5867dc(0x24f),_0x2a7a0a);let _0x3dc531=JSON[_0x5867dc(0x1e6)](localStorage[_0x5867dc(0x2c2)]('monthStyles')||'{}');if(!_0x3dc531[_0x162f90])_0x3dc531[_0x162f90]={};_0x3dc531[_0x162f90][_0x3f8a01]=_0x2a7a0a,localStorage['setItem'](_0x5867dc(0x256),JSON[_0x5867dc(0x292)](_0x3dc531));const _0x18aaa5=sessionStorage[_0x5867dc(0x2c2)](_0x5867dc(0x2b4));if(_0x18aaa5)try{const {error:_0x59b630}=await _db[_0x5867dc(0x226)](_0x5867dc(0x237),{'input_password':_0x18aaa5,'config_id':_0x5b5dfc,'new_value':JSON[_0x5867dc(0x292)](_0x3dc531[_0x162f90])});if(_0x59b630)throw _0x59b630;console[_0x5867dc(0x209)](_0x5867dc(0x2b0));}catch(_0x555be1){console[_0x5867dc(0x25d)](_0x5867dc(0x283),_0x555be1[_0x5867dc(0x26a)]);}}async function syncData(){const _0x182348=_0x347be7,_0x16d092=currentDate[_0x182348(0x201)](),_0x3415ea=currentDate[_0x182348(0x20b)]();try{let _0x34275e=_db[_0x182348(0x1b2)]('events')['select']('*')['eq']('year',_0x16d092);viewMode===_0x182348(0x2b5)&&(_0x34275e=_0x34275e['eq'](_0x182348(0x2b5),_0x3415ea));const {data:_0x4cbde7,error:_0xa2d4ee}=await _0x34275e;!_0xa2d4ee&&_0x4cbde7?(events=_0x4cbde7,viewMode===_0x182348(0x23a)?renderYear():renderCalendar()):console['error']('数据库读取错误:',_0xa2d4ee);}catch(_0x158960){console['error'](_0x182348(0x242),_0x158960);}await updateDisplayBg();}function getLunar(_0x575561,_0x7987c5,_0x3344b5){const _0x5ec99f=_0x347be7,_0x4502ca=new Date(_0x575561,_0x7987c5,_0x3344b5),_0xe0365f=new Intl['DateTimeFormat'](_0x5ec99f(0x206),{'day':_0x5ec99f(0x297)})['format'](_0x4502ca);if(_0xe0365f==='1日')return new Intl[(_0x5ec99f(0x1e8))](_0x5ec99f(0x206),{'month':_0x5ec99f(0x232)})[_0x5ec99f(0x2bc)](_0x4502ca);const _0x2caa0d=parseInt(_0xe0365f),_0x168e43=['','一','二','三','四','五','六','七','八','九','十'];if(_0x2caa0d<=0xa)return'初'+_0x168e43[_0x2caa0d];if(_0x2caa0d<0x14)return'十'+_0x168e43[_0x2caa0d%0xa];if(_0x2caa0d===0x14)return'二十';if(_0x2caa0d<0x1e)return'廿'+_0x168e43[_0x2caa0d%0xa];return'三十';}async function renderCalendar(){const _0x5a5072=_0x347be7,_0x3b0a5e=document[_0x5a5072(0x2b7)](_0x5a5072(0x211));_0x3b0a5e&&(_0x3b0a5e['innerHTML']='');document['getElementById']('dateGrid')[_0x5a5072(0x1da)]='',document[_0x5a5072(0x2b7)](_0x5a5072(0x2a8))['innerHTML']='';const _0x3dfb90=document[_0x5a5072(0x2b7)]('dateGrid'),_0x290df1=document[_0x5a5072(0x2b7)](_0x5a5072(0x2a8));if(!_0x3dfb90||!_0x290df1)return;_0x3dfb90['innerHTML']='',_0x290df1[_0x5a5072(0x1da)]='';const _0x55eb95=currentDate[_0x5a5072(0x201)](),_0x46ffd2=currentDate[_0x5a5072(0x20b)]();let _0x4fe26f={'blur':0x4,'opacity':0.5};const _0x1447bc=_0x5a5072(0x238)+_0x55eb95+'-'+_0x46ffd2;try{const {data:_0x58dfe6}=await _db[_0x5a5072(0x1b2)](_0x5a5072(0x2c5))['select'](_0x5a5072(0x270))['eq']('id',_0x1447bc)[_0x5a5072(0x1b7)]();if(_0x58dfe6&&_0x58dfe6[_0x5a5072(0x270)]){_0x4fe26f=JSON[_0x5a5072(0x1e6)](_0x58dfe6[_0x5a5072(0x270)]);let _0xf60f72=JSON[_0x5a5072(0x1e6)](localStorage[_0x5a5072(0x2c2)]('monthStyles')||'{}');_0xf60f72[_0x55eb95+'-'+_0x46ffd2]=_0x4fe26f,localStorage['setItem'](_0x5a5072(0x256),JSON[_0x5a5072(0x292)](_0xf60f72));}else{const _0x4f5d68=JSON[_0x5a5072(0x1e6)](localStorage[_0x5a5072(0x2c2)]('monthStyles')||'{}');_0x4fe26f=_0x4f5d68[_0x55eb95+'-'+_0x46ffd2]||{'blur':0x4,'opacity':0.5};}}catch(_0x5545d3){const _0x5408b2=JSON[_0x5a5072(0x1e6)](localStorage[_0x5a5072(0x2c2)](_0x5a5072(0x256))||'{}');_0x4fe26f=_0x5408b2[_0x55eb95+'-'+_0x46ffd2]||{'blur':0x4,'opacity':0.5};}const _0x256467=document['getElementById'](_0x5a5072(0x23e)),_0x19d3d8=document[_0x5a5072(0x2b7)](_0x5a5072(0x265)),_0x5b9943=document['getElementById'](_0x5a5072(0x21b)),_0x1a6fe3=document[_0x5a5072(0x2b7)](_0x5a5072(0x218)),_0x118576=_0x4fe26f['blur']!==undefined?_0x4fe26f[_0x5a5072(0x2a0)]:0x4,_0xd28d28=_0x4fe26f['opacity']!==undefined?_0x4fe26f[_0x5a5072(0x2a2)]:0.5;if(_0x256467)_0x256467[_0x5a5072(0x270)]=_0x118576;if(_0x5b9943)_0x5b9943[_0x5a5072(0x2e5)]=_0x118576;if(_0x19d3d8)_0x19d3d8[_0x5a5072(0x270)]=_0xd28d28;if(_0x1a6fe3)_0x1a6fe3['innerText']=_0xd28d28;const _0xf9306d=document[_0x5a5072(0x2b7)](_0x5a5072(0x21c));_0xf9306d&&(_0xf9306d[_0x5a5072(0x29f)]['filter']=_0x5a5072(0x2ac)+_0x118576+_0x5a5072(0x23f),_0xf9306d[_0x5a5072(0x29f)][_0x5a5072(0x2a2)]=_0xd28d28);const _0x447dd9=document[_0x5a5072(0x2b7)](_0x5a5072(0x2ad));if(_0x447dd9)_0x447dd9[_0x5a5072(0x2e5)]=_0x55eb95+'年\x20'+(_0x46ffd2+0x1)+'月';const _0x372f86=new Date(_0x55eb95,_0x46ffd2,0x1)[_0x5a5072(0x29e)](),_0x582513=new Date(_0x55eb95,_0x46ffd2+0x1,0x0)[_0x5a5072(0x1fd)]();for(let _0x38af6a=0x0;_0x38af6a<_0x372f86;_0x38af6a++)_0x3dfb90[_0x5a5072(0x1da)]+=_0x5a5072(0x29c);let _0xb3099={};for(let _0x2c7c57=0x1;_0x2c7c57<=_0x582513;_0x2c7c57++){_0x3dfb90[_0x5a5072(0x1da)]+='<div\x20class=\x22cell\x22\x20onclick=\x22handleCellClick('+_0x2c7c57+')\x22\x20id=\x22cell-'+_0x2c7c57+_0x5a5072(0x2dd)+_0x2c7c57+'</span><span\x20class=\x22l\x22>'+getLunar(_0x55eb95,_0x46ffd2,_0x2c7c57)+'</span></div></div>',_0xb3099[_0x2c7c57]={'row':Math[_0x5a5072(0x28e)]((_0x372f86+_0x2c7c57-0x1)/0x7)+0x1,'col':(_0x372f86+_0x2c7c57-0x1)%0x7+0x1};}const _0x2e8bb4=(0x7-(_0x372f86+_0x582513)%0x7)%0x7;for(let _0x23ddf9=0x0;_0x23ddf9<_0x2e8bb4;_0x23ddf9++)_0x3dfb90[_0x5a5072(0x1da)]+='<div\x20class=\x22empty-cell\x22></div>';const _0x1c7a2c=events[_0x5a5072(0x2d7)](_0x4454b1=>_0x4454b1['year']===_0x55eb95&&_0x4454b1[_0x5a5072(0x2b5)]===_0x46ffd2),_0x4c3e5c=[..._0x1c7a2c]['sort']((_0xbc1d97,_0x3eeac7)=>_0xbc1d97['start']-_0x3eeac7['start']||_0xbc1d97[_0x5a5072(0x2aa)]-_0x3eeac7[_0x5a5072(0x2aa)]),_0x30214e={};_0x4c3e5c['forEach'](_0x5d7096=>{const _0x1f1c6f=_0x5a5072;let _0x502c4b=0x0;while(!![]){const _0x43a5bb=_0x1c7a2c[_0x1f1c6f(0x1bc)](_0x2a9657=>{const _0x2a2aac=_0x1f1c6f,_0x3d5c7a=Number(_0x2a9657[_0x2a2aac(0x2be)]),_0xed769c=Number(_0x2a9657[_0x2a2aac(0x2aa)]),_0x7ac69b=Number(_0x5d7096[_0x2a2aac(0x2be)]),_0xb34975=Number(_0x5d7096[_0x2a2aac(0x2aa)]);return _0x30214e[_0x2a9657['id']]===_0x502c4b&&!(_0xed769c<_0x7ac69b||_0x3d5c7a>_0xb34975);});if(!_0x43a5bb){_0x30214e[_0x5d7096['id']]=_0x502c4b;break;}_0x502c4b++;}});const _0x43b3b2={};for(let _0x3aabe8=0x1;_0x3aabe8<=_0x582513;_0x3aabe8++){const _0x433e2e=_0x1c7a2c[_0x5a5072(0x2d7)](_0x117826=>_0x3aabe8>=Number(_0x117826[_0x5a5072(0x2be)])&&_0x3aabe8<=Number(_0x117826[_0x5a5072(0x2aa)]))[_0x5a5072(0x235)](_0x5d2dcc=>_0x30214e[_0x5d2dcc['id']]);_0x43b3b2[_0x3aabe8]=_0x433e2e['length']>0x0?Math[_0x5a5072(0x248)](..._0x433e2e)+0x1:0x0;}_0x1c7a2c[_0x5a5072(0x241)](_0x1c4f63=>{const _0x5ac286=_0x5a5072;if(!_0xb3099[_0x1c4f63[_0x5ac286(0x2be)]]||!_0xb3099[_0x1c4f63[_0x5ac286(0x2aa)]])return;const _0x5d8e83=_0x30214e[_0x1c4f63['id']];let _0x2a6d2a=-0x1,_0x1a7360=-0x1;for(let _0x289d7a=_0xb3099[_0x1c4f63[_0x5ac286(0x2be)]]['row'];_0x289d7a<=_0xb3099[_0x1c4f63['end']][_0x5ac286(0x1c9)];_0x289d7a++){const _0x318460=_0x289d7a===_0xb3099[_0x1c4f63['start']][_0x5ac286(0x1c9)]?_0xb3099[_0x1c4f63['start']][_0x5ac286(0x1ec)]:0x1,_0x24af0c=_0x289d7a===_0xb3099[_0x1c4f63[_0x5ac286(0x2aa)]][_0x5ac286(0x1c9)]?_0xb3099[_0x1c4f63[_0x5ac286(0x2aa)]][_0x5ac286(0x1ec)]:0x7;_0x24af0c-_0x318460+0x1>_0x2a6d2a&&(_0x2a6d2a=_0x24af0c-_0x318460+0x1,_0x1a7360=_0x289d7a);}for(let _0x43612f=_0xb3099[_0x1c4f63[_0x5ac286(0x2be)]][_0x5ac286(0x1c9)];_0x43612f<=_0xb3099[_0x1c4f63[_0x5ac286(0x2aa)]]['row'];_0x43612f++){const _0x1712b2=_0x43612f===_0xb3099[_0x1c4f63[_0x5ac286(0x2be)]][_0x5ac286(0x1c9)]?_0xb3099[_0x1c4f63[_0x5ac286(0x2be)]][_0x5ac286(0x1ec)]:0x1,_0x47aa36=_0x43612f===_0xb3099[_0x1c4f63['end']][_0x5ac286(0x1c9)]?_0xb3099[_0x1c4f63['end']][_0x5ac286(0x1ec)]:0x7,_0x3bc9fd=document[_0x5ac286(0x1ba)]('div');_0x3bc9fd[_0x5ac286(0x2ce)]=_0x5ac286(0x290),_0x3bc9fd[_0x5ac286(0x29f)][_0x5ac286(0x20f)]=_0x1712b2+'/'+(_0x47aa36+0x1),_0x3bc9fd[_0x5ac286(0x29f)][_0x5ac286(0x277)]=_0x43612f;let _0x14fa8a=_0x1c4f63[_0x5ac286(0x28b)]||_0x1c4f63['color']||_0x5ac286(0x2ca),_0x108d68=typeof _0x14fa8a===_0x5ac286(0x215)&&_0x14fa8a[_0x5ac286(0x29b)]('|')?_0x14fa8a['split']('|')[0x0]:_0x14fa8a;_0x3bc9fd[_0x5ac286(0x29f)][_0x5ac286(0x1c7)]=_0x108d68,_0x3bc9fd[_0x5ac286(0x29f)]['display']=_0x5ac286(0x1b0),_0x3bc9fd['style'][_0x5ac286(0x225)]=_0x5ac286(0x26f);let _0x387874=0x0;for(let _0x2ccf59=_0x1c4f63['start'];_0x2ccf59<=_0x1c4f63[_0x5ac286(0x2aa)];_0x2ccf59++)_0x387874=Math['max'](_0x387874,_0x43b3b2[_0x2ccf59]||0x0);const _0x1a8622=0x41/(_0x387874||0x1)-0x1;_0x3bc9fd[_0x5ac286(0x29f)]['height']=_0x1a8622+'px',_0x3bc9fd['style']['marginTop']=0x16+_0x5d8e83*(_0x1a8622+0x1)+'px',_0x43612f===_0x1a7360&&(_0x3bc9fd[_0x5ac286(0x1da)]=_0x1c4f63[_0x5ac286(0x255)]||_0x1c4f63[_0x5ac286(0x2c7)]||''),_0x3bc9fd[_0x5ac286(0x2e4)]=_0x4535e8=>{const _0x19509f=_0x5ac286;_0x4535e8[_0x19509f(0x22d)](),typeof isAdmin!=='undefined'&&isAdmin===!![]?openEditModal(_0x1c4f63['id']):renderGuestDetail(_0x1c4f63);},_0x290df1[_0x5ac286(0x22a)](_0x3bc9fd);}}),updateDisplayBg();}function createLinkCard(_0x4f752c){const _0x436028=/(https?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%~_|])/ig;return _0x4f752c['replace'](_0x436028,_0x2e307b=>{const _0x141e5c=_0x5e14;return _0x141e5c(0x2c8)+_0x2e307b+'\x22\x20target=\x22_blank\x22\x20title=\x22打开链接\x22\x20style=\x22\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20display:\x20inline-flex;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20align-items:\x20center;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20justify-content:\x20center;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20width:\x2024px;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20height:\x2024px;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20margin:\x200\x204px;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20background:\x20#4a90e2;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20border-radius:\x206px;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20vertical-align:\x20middle;\x20\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20text-decoration:\x20none;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20transition:\x20transform\x200.2s;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20pointer-events:\x20auto;\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x22\x20onmouseover=\x22this.style.transform=\x27scale(1.1)\x27\x22\x20onmouseout=\x22this.style.transform=\x27scale(1)\x27\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<svg\x20viewBox=\x220\x200\x2024\x2024\x22\x20width=\x2214\x22\x20height=\x2214\x22\x20stroke=\x22white\x22\x20stroke-width=\x222.5\x22\x20fill=\x22none\x22\x20style=\x22display:block;\x22>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<path\x20d=\x22M10\x2013a5\x205\x200\x200\x200\x207.54.54l3-3a5\x205\x200\x200\x200-7.07-7.07l-1.72\x201.71\x22></path>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20<path\x20d=\x22M14\x2011a5\x205\x200\x200\x200-7.54-.54l-3\x203a5\x205\x200\x200\x200\x207.07\x207.07l1.71-1.71\x22></path>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</svg>\x0a\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20\x20</a>';});}async function saveEvent(){const _0x60a59f=_0x347be7,_0x44a11b=document[_0x60a59f(0x2b7)](_0x60a59f(0x229)),_0x3f6c94=document['getElementById']('editor-field'),_0x51365a=parseInt(document['getElementById'](_0x60a59f(0x26c))[_0x60a59f(0x270)]),_0x383d15=parseInt(document[_0x60a59f(0x2b7)](_0x60a59f(0x1ee))[_0x60a59f(0x270)]),_0x50f51b=document[_0x60a59f(0x2b7)](_0x60a59f(0x1df)),_0x2b6225=_0x50f51b?_0x50f51b[_0x60a59f(0x270)]:null,_0x193bd9=_0x44a11b['style'][_0x60a59f(0x1e3)]||'left',_0x46ef37=_0x44a11b['style'][_0x60a59f(0x1c3)]||'flex-start',_0x56a2a1=_0x44a11b[_0x60a59f(0x29f)][_0x60a59f(0x221)]||_0x60a59f(0x1cc),_0x34f6f3=document[_0x60a59f(0x1ba)](_0x60a59f(0x29d));_0x34f6f3[_0x60a59f(0x1da)]=_0x44a11b[_0x60a59f(0x1da)];const _0xee6322=_0x60a59f(0x2d4)+_0x56a2a1+';\x20align-items:stretch;\x22>'+_0x34f6f3['innerHTML']+_0x60a59f(0x239),_0x16f4a1=_0x3f6c94[_0x60a59f(0x29f)][_0x60a59f(0x1e3)]||_0x60a59f(0x24a),_0x2b8105=_0x3f6c94['style'][_0x60a59f(0x1c3)]||_0x60a59f(0x1cc),_0x6c5c58=_0x3f6c94['style'][_0x60a59f(0x221)]||_0x60a59f(0x1cc),_0x5ebee6=document[_0x60a59f(0x1ba)](_0x60a59f(0x29d));_0x5ebee6[_0x60a59f(0x1da)]=createLinkCard(_0x3f6c94[_0x60a59f(0x1da)]);const _0x317c95=_0x60a59f(0x2d4)+_0x6c5c58+_0x60a59f(0x24e)+_0x5ebee6['innerHTML']+_0x60a59f(0x239),_0x7e5ff3=window[_0x60a59f(0x20e)],_0x33d2cb=sessionStorage['getItem'](_0x60a59f(0x2b4));if(!_0x7e5ff3||!_0x33d2cb){alert('⚠️\x20请先点击隐藏区域并输入管理员暗号');return;}const _0x2fdb2f=editingId?editingId:Math[_0x60a59f(0x28e)](Date[_0x60a59f(0x220)]()/0x3e8);try{const {error:_0x2ea90e}=await _db[_0x60a59f(0x226)](_0x60a59f(0x1b9),{'input_password':_0x33d2cb,'event_id':_0x2fdb2f,'event_text':_0xee6322,'event_content':_0x317c95,'event_start':Math[_0x60a59f(0x2de)](_0x51365a,_0x383d15),'event_end':Math[_0x60a59f(0x248)](_0x51365a,_0x383d15),'event_year':currentDate[_0x60a59f(0x201)](),'event_month':currentDate[_0x60a59f(0x20b)](),'event_bar_color':currentBarColor});if(_0x2ea90e)throw _0x2ea90e;if(_0x2b6225!==null){const {error:_0xa3f898}=await _db['rpc'](_0x60a59f(0x237),{'input_password':_0x33d2cb,'config_id':_0x60a59f(0x29a),'new_value':_0x2b6225['toString']()});if(_0xa3f898)throw _0xa3f898;document[_0x60a59f(0x279)][_0x60a59f(0x29f)][_0x60a59f(0x1b3)](_0x60a59f(0x24f),_0x2b6225);}console['log']('✅\x20全部内容已同步保存'),closeModal(),setTimeout(()=>{syncData();},0xc8);}catch(_0x2c39b8){console[_0x60a59f(0x25d)]('保存失败:',_0x2c39b8),alert(_0x60a59f(0x1d4)+_0x2c39b8[_0x60a59f(0x26a)]),_0x2c39b8[_0x60a59f(0x26a)][_0x60a59f(0x29b)](_0x60a59f(0x2b6))&&sessionStorage[_0x60a59f(0x2bb)](_0x60a59f(0x2b4));}}function openEditModal(_0x2aa867,_0x271919,_0x543193){const _0x1a57fc=_0x347be7;if(!isAdmin)return;editingId=_0x2aa867;const _0xcfa771=document[_0x1a57fc(0x2b7)]('editor-title'),_0x4ffe39=document[_0x1a57fc(0x2b7)]('editor-field'),_0x5cbff2=document['getElementById']('startDaySelect'),_0x39b8a7=document['getElementById']('endDaySelect'),_0x3c9160=document['getElementById']('delBtn'),_0x39f6f1=new Date(currentDate[_0x1a57fc(0x201)](),currentDate[_0x1a57fc(0x20b)]()+0x1,0x0)[_0x1a57fc(0x1fd)]();_0x5cbff2['innerHTML']=_0x39b8a7['innerHTML']='';for(let _0x2b0b3c=0x1;_0x2b0b3c<=_0x39f6f1;_0x2b0b3c++){_0x5cbff2[_0x1a57fc(0x1da)]+=_0x1a57fc(0x2c3)+_0x2b0b3c+'\x22>'+_0x2b0b3c+_0x1a57fc(0x1c4),_0x39b8a7[_0x1a57fc(0x1da)]+=_0x1a57fc(0x2c3)+_0x2b0b3c+'\x22>'+_0x2b0b3c+_0x1a57fc(0x1c4);}if(_0x2aa867){const _0x30b6d5=events[_0x1a57fc(0x21f)](_0x2ee55e=>_0x2ee55e['id']==_0x2aa867);_0x5cbff2[_0x1a57fc(0x270)]=_0x30b6d5['start'],_0x39b8a7[_0x1a57fc(0x270)]=_0x30b6d5[_0x1a57fc(0x2aa)];const _0x59c2fd=document[_0x1a57fc(0x1ba)](_0x1a57fc(0x29d));_0x59c2fd[_0x1a57fc(0x1da)]=_0x30b6d5[_0x1a57fc(0x255)]||'';const _0x2b550e=_0x59c2fd[_0x1a57fc(0x269)](_0x1a57fc(0x224));_0x2b550e?(_0xcfa771[_0x1a57fc(0x1da)]=_0x2b550e['innerHTML'],_0xcfa771['style'][_0x1a57fc(0x22c)]=_0x1a57fc(0x1b0),_0xcfa771['style'][_0x1a57fc(0x2a7)]='column',_0xcfa771[_0x1a57fc(0x29f)][_0x1a57fc(0x1c3)]='stretch',_0xcfa771[_0x1a57fc(0x29f)][_0x1a57fc(0x1e3)]=_0x1a57fc(0x2e0),_0xcfa771['style']['justifyContent']=_0x2b550e[_0x1a57fc(0x29f)]['justifyContent']||_0x1a57fc(0x1cc)):(_0xcfa771[_0x1a57fc(0x1da)]=_0x30b6d5[_0x1a57fc(0x255)]||'',_0xcfa771[_0x1a57fc(0x29f)][_0x1a57fc(0x1e3)]=_0x1a57fc(0x2e0),_0xcfa771[_0x1a57fc(0x29f)][_0x1a57fc(0x1c3)]=_0x1a57fc(0x1f9));const _0x41467e=document[_0x1a57fc(0x1ba)](_0x1a57fc(0x29d));_0x41467e[_0x1a57fc(0x1da)]=_0x30b6d5[_0x1a57fc(0x2c7)]||'';const _0x293e78=_0x41467e[_0x1a57fc(0x269)](_0x1a57fc(0x224));_0x293e78?(_0x4ffe39[_0x1a57fc(0x1da)]=_0x293e78[_0x1a57fc(0x1da)],_0x4ffe39['style'][_0x1a57fc(0x22c)]=_0x1a57fc(0x1b0),_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x2a7)]=_0x1a57fc(0x1e9),_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x1c3)]=_0x1a57fc(0x1f9),_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x1e3)]=_0x1a57fc(0x2e0),_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x221)]=_0x293e78[_0x1a57fc(0x29f)][_0x1a57fc(0x221)]||_0x1a57fc(0x1cc)):(_0x4ffe39['innerHTML']=_0x30b6d5[_0x1a57fc(0x2c7)]||'',_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x1e3)]='inherit',_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x1c3)]=_0x1a57fc(0x1f9));const _0xe7443=_0x30b6d5[_0x1a57fc(0x28b)]||_0x30b6d5[_0x1a57fc(0x298)]||_0x1a57fc(0x2ca);currentBarColor=typeof _0xe7443===_0x1a57fc(0x215)?_0xe7443['split']('|')[0x0]:_0xe7443,_0x3c9160[_0x1a57fc(0x29f)][_0x1a57fc(0x22c)]=_0x1a57fc(0x2b9);}else _0xcfa771['innerHTML']='',_0x4ffe39['innerHTML']='',_0x5cbff2[_0x1a57fc(0x270)]=Math['min'](_0x271919,_0x39f6f1),_0x39b8a7[_0x1a57fc(0x270)]=Math[_0x1a57fc(0x2de)](_0x543193,_0x39f6f1),currentBarColor=_0x1a57fc(0x2ca),_0xcfa771['style']['textAlign']=_0x4ffe39[_0x1a57fc(0x29f)][_0x1a57fc(0x1e3)]=_0x1a57fc(0x24a),_0xcfa771[_0x1a57fc(0x29f)][_0x1a57fc(0x221)]=_0x4ffe39[_0x1a57fc(0x29f)]['justifyContent']='flex-start',_0xcfa771[_0x1a57fc(0x29f)][_0x1a57fc(0x1c3)]=_0x4ffe39['style'][_0x1a57fc(0x1c3)]='flex-start',_0x3c9160['style'][_0x1a57fc(0x22c)]=_0x1a57fc(0x1b1);document[_0x1a57fc(0x2b7)](_0x1a57fc(0x22f))[_0x1a57fc(0x29f)][_0x1a57fc(0x22c)]='block',document[_0x1a57fc(0x2b7)](_0x1a57fc(0x264))[_0x1a57fc(0x29f)][_0x1a57fc(0x22c)]='block';}function setStyle(_0x4a360c,_0x4e91ca,_0x5cd801){const _0x4c81af=_0x347be7;_0x4a360c[_0x4c81af(0x1d7)]();const _0x256ae3=window[_0x4c81af(0x299)]();if(!_0x256ae3[_0x4c81af(0x23b)]||_0x256ae3['toString']()[_0x4c81af(0x296)]===0x0)return;const _0x182d66=_0x256ae3[_0x4c81af(0x27c)](0x0),_0x58d5a8=document[_0x4c81af(0x1ba)](_0x4c81af(0x26b));_0x58d5a8[_0x4c81af(0x29f)][_0x4e91ca]=_0x5cd801,_0x58d5a8[_0x4c81af(0x29f)]['lineHeight']=_0x4c81af(0x295),_0x58d5a8[_0x4c81af(0x22a)](_0x182d66[_0x4c81af(0x240)]()),_0x182d66['insertNode'](_0x58d5a8),_0x256ae3[_0x4c81af(0x233)]();}function exec(_0x10879f,_0x3d1a62){const _0x3ca7f0=_0x347be7;_0x10879f[_0x3ca7f0(0x1d7)]();const _0x3e7596=document[_0x3ca7f0(0x1ef)];if(_0x3e7596['id']!=='editor-title'&&_0x3e7596['id']!==_0x3ca7f0(0x212))return;if(_0x3d1a62==='justifyLeft'||_0x3d1a62===_0x3ca7f0(0x1c8)||_0x3d1a62===_0x3ca7f0(0x2ba)){document[_0x3ca7f0(0x20a)](_0x3d1a62,![],null),_0x3e7596[_0x3ca7f0(0x29f)][_0x3ca7f0(0x1c3)]=_0x3ca7f0(0x1f9),_0x3e7596[_0x3ca7f0(0x29f)]['textAlign']='inherit';return;}document[_0x3ca7f0(0x20a)](_0x3d1a62,![],null);}function setAlign(_0x2179c8,_0x25fb04){const _0x3f271e=_0x347be7;_0x2179c8[_0x3f271e(0x1d7)]();const _0x5b4d06=document[_0x3f271e(0x1ef)];if(_0x5b4d06['id']!=='editor-title'&&_0x5b4d06['id']!==_0x3f271e(0x212))return;_0x5b4d06[_0x3f271e(0x29f)][_0x3f271e(0x22c)]='flex',_0x5b4d06['style']['flexDirection']='column',_0x5b4d06[_0x3f271e(0x29f)][_0x3f271e(0x221)]=_0x25fb04;}function setBarColor(_0x433092){currentBarColor=_0x433092;}async function changeBg(){const _0x4799b9=_0x347be7,_0x4a564a=sessionStorage[_0x4799b9(0x2c2)](_0x4799b9(0x2b4));if(!_0x4a564a)return alert(_0x4799b9(0x2b3));const _0x2fb2c7=document[_0x4799b9(0x1ba)]('input');_0x2fb2c7[_0x4799b9(0x24c)]=_0x4799b9(0x250),_0x2fb2c7[_0x4799b9(0x257)]=_0x4799b9(0x25b),_0x2fb2c7[_0x4799b9(0x280)]=async _0x351dc0=>{const _0x2c6fc3=_0x4799b9,_0x3e3e66=_0x351dc0[_0x2c6fc3(0x251)][_0x2c6fc3(0x272)][0x0];if(!_0x3e3e66)return;const _0x3f54fb=_0x3e3e66[_0x2c6fc3(0x24c)]===_0x2c6fc3(0x2af),_0x2b75b3=_0x3e3e66[_0x2c6fc3(0x27a)]>0xc8*0x400,_0x4771d7='bg_'+currentDate[_0x2c6fc3(0x201)]()+'_'+currentDate[_0x2c6fc3(0x20b)](),_0xc1a563=_0x3f54fb?_0x2c6fc3(0x2e1):_0x3e3e66[_0x2c6fc3(0x24c)]===_0x2c6fc3(0x228)?'png':_0x2c6fc3(0x1e4),_0x4fdc96=_0x4771d7+'_'+Date[_0x2c6fc3(0x220)]()+'.'+_0xc1a563;if(_0x3f54fb||!_0x2b75b3)console[_0x2c6fc3(0x209)](_0x2c6fc3(0x200)),await uploadProcess(_0x3e3e66,_0x4fdc96,_0x3e3e66[_0x2c6fc3(0x24c)],_0x4771d7);else{console['log']('启动压缩模式...');const _0x1acce8=new FileReader();_0x1acce8[_0x2c6fc3(0x2b8)](_0x3e3e66),_0x1acce8[_0x2c6fc3(0x223)]=_0x56193c=>{const _0x34236e=_0x2c6fc3,_0x931e42=new Image();_0x931e42[_0x34236e(0x234)]=_0x56193c[_0x34236e(0x251)][_0x34236e(0x244)],_0x931e42[_0x34236e(0x223)]=()=>{const _0x3b9e50=_0x34236e,_0xa80374=document[_0x3b9e50(0x1ba)](_0x3b9e50(0x294)),_0x295caa=_0xa80374[_0x3b9e50(0x20c)]('2d'),_0x48f298=0x780,_0x26b62d=Math['min'](0x1,_0x48f298/_0x931e42[_0x3b9e50(0x2e3)]);_0xa80374['width']=_0x931e42[_0x3b9e50(0x2e3)]*_0x26b62d,_0xa80374[_0x3b9e50(0x25f)]=_0x931e42[_0x3b9e50(0x25f)]*_0x26b62d,_0x295caa[_0x3b9e50(0x1c5)](_0x931e42,0x0,0x0,_0xa80374[_0x3b9e50(0x2e3)],_0xa80374['height']);const _0x17ef1a=_0x3e3e66[_0x3b9e50(0x24c)]===_0x3b9e50(0x228)?_0x3b9e50(0x228):'image/jpeg';_0xa80374[_0x3b9e50(0x288)](_0x4d7ca9=>{uploadProcess(_0x4d7ca9,_0x4fdc96,_0x17ef1a,_0x4771d7);},_0x17ef1a,0.8);};};}},_0x2fb2c7['click']();}async function uploadProcess(_0x225ca5,_0x264b31,_0x58bb3f,_0x47260f){const _0x2e48d5=_0x347be7;try{const {error:_0x520d9e}=await _db[_0x2e48d5(0x273)][_0x2e48d5(0x1b2)](_0x2e48d5(0x24d))[_0x2e48d5(0x214)](_0x264b31,_0x225ca5,{'contentType':_0x58bb3f});if(_0x520d9e)throw _0x520d9e;const {data:{publicUrl:_0x479642}}=_db[_0x2e48d5(0x273)]['from'](_0x2e48d5(0x24d))[_0x2e48d5(0x28a)](_0x264b31),{error:_0x2af7c4}=await _db[_0x2e48d5(0x226)](_0x2e48d5(0x237),{'input_password':sessionStorage['getItem'](_0x2e48d5(0x2b4)),'config_id':_0x47260f,'new_value':_0x479642});if(_0x2af7c4)throw _0x2af7c4;localStorage[_0x2e48d5(0x1cd)](getCacheKey(_0x47260f),_0x479642);;updateDisplayBg(),alert('背景同步成功！✨');}catch(_0x368bac){console[_0x2e48d5(0x25d)](_0x368bac),alert(_0x2e48d5(0x284)+_0x368bac[_0x2e48d5(0x26a)]);}}async function updateDisplayBg(){const _0x3b7582=_0x347be7,_0x54f87a=document[_0x3b7582(0x2b7)](_0x3b7582(0x2a1)),_0x36bbef=_0x54f87a&&_0x54f87a[_0x3b7582(0x29f)][_0x3b7582(0x22c)]!==_0x3b7582(0x1b1);if(_0x36bbef){console['log'](_0x3b7582(0x2b2));return;}const _0x505f42=_0x3b7582(0x1ce)+currentDate[_0x3b7582(0x201)]()+'_'+currentDate[_0x3b7582(0x20b)]();try{let _0xcc2ad=localStorage[_0x3b7582(0x2c2)](getCacheKey(_0x505f42));if(!_0xcc2ad){const {data:_0x56262d}=await _db[_0x3b7582(0x1b2)]('configs')['select'](_0x3b7582(0x270))['eq']('id',_0x505f42)[_0x3b7582(0x1b7)]();_0x56262d&&_0x56262d[_0x3b7582(0x270)]&&(_0xcc2ad=_0x56262d['value'],localStorage[_0x3b7582(0x1cd)](getCacheKey(_0x505f42),_0xcc2ad));}const _0x39de62=document[_0x3b7582(0x2b7)]('bg-layer'),_0x156ebd=document[_0x3b7582(0x2b7)](_0x3b7582(0x1d9));if(_0xcc2ad)_0x39de62['style'][_0x3b7582(0x253)]=_0x3b7582(0x1f3)+_0xcc2ad+'\x27)',_0x156ebd[_0x3b7582(0x1d0)][_0x3b7582(0x202)]('has-bg');else{}}catch(_0x5afb24){console['log'](_0x3b7582(0x1b6),_0x5afb24);}}function exportData(){const _0x5835c8=_0x347be7,_0x41d302=new Blob([JSON[_0x5835c8(0x292)](events)],{'type':_0x5835c8(0x276)}),_0x19b591=document['createElement']('a');_0x19b591['href']=URL[_0x5835c8(0x2db)](_0x41d302),_0x19b591['download']=_0x5835c8(0x217),_0x19b591[_0x5835c8(0x293)]();}async function importData(){const _0x1107a7=_0x347be7,_0x33a319=sessionStorage['getItem'](_0x1107a7(0x2b4));if(!_0x33a319)return alert('请先解锁权限（连击5次入口）');const _0x173519=document[_0x1107a7(0x1ba)](_0x1107a7(0x2dc));_0x173519['type']=_0x1107a7(0x250),_0x173519['accept']=_0x1107a7(0x2a3),_0x173519['onchange']=_0x764b53=>{const _0x436521=_0x1107a7,_0x1f09e8=new FileReader();_0x1f09e8['onload']=async _0x458115=>{const _0x14ceae=_0x5e14;try{const _0x3a9556=JSON[_0x14ceae(0x1e6)](_0x458115[_0x14ceae(0x251)][_0x14ceae(0x244)]);let _0xa34b73=0x0;for(let _0x3a390b of _0x3a9556){const _0x1f0b42={'input_password':_0x33a319,'event_id':_0x3a390b['id'],'e_text':_0x3a390b[_0x14ceae(0x255)],'e_start':parseInt(_0x3a390b[_0x14ceae(0x2be)]),'e_end':parseInt(_0x3a390b[_0x14ceae(0x2aa)]),'e_year':parseInt(_0x3a390b[_0x14ceae(0x23a)]),'e_month':parseInt(_0x3a390b[_0x14ceae(0x2b5)]),'e_color':_0x3a390b[_0x14ceae(0x28b)]||_0x3a390b[_0x14ceae(0x298)]||_0x14ceae(0x213),'e_content':_0x3a390b[_0x14ceae(0x2c7)]||''},{error:_0x40cb8b}=await _db[_0x14ceae(0x226)]('secure_upsert_event',_0x1f0b42);_0x40cb8b?console['error'](_0x14ceae(0x271),_0x40cb8b[_0x14ceae(0x26a)]):_0xa34b73++;}alert('同步完成！成功导入\x20'+_0xa34b73+'\x20条数据。'),syncData();}catch(_0x1ffb97){alert(_0x14ceae(0x23d));}},_0x1f09e8[_0x436521(0x1fc)](_0x764b53['target'][_0x436521(0x272)][0x0]);},_0x173519[_0x1107a7(0x293)]();}function toggleView(){const _0x55a3b8=_0x347be7;viewMode=viewMode==='month'?_0x55a3b8(0x23a):_0x55a3b8(0x2b5),document[_0x55a3b8(0x2b7)](_0x55a3b8(0x2ab))[_0x55a3b8(0x29f)][_0x55a3b8(0x22c)]=viewMode===_0x55a3b8(0x2b5)?_0x55a3b8(0x2b9):'none',document[_0x55a3b8(0x2b7)](_0x55a3b8(0x2a1))[_0x55a3b8(0x29f)][_0x55a3b8(0x22c)]=viewMode===_0x55a3b8(0x23a)?_0x55a3b8(0x1f4):_0x55a3b8(0x1b1),syncData();}function renderYear(){const _0xb1fa63=_0x347be7,_0x5da4ff=document['getElementById'](_0xb1fa63(0x2a1)),_0x467f88=document[_0xb1fa63(0x2b7)]('monthView');_0x5da4ff['style'][_0xb1fa63(0x22c)]=_0xb1fa63(0x1f4);if(_0x467f88)_0x467f88[_0xb1fa63(0x29f)][_0xb1fa63(0x22c)]=_0xb1fa63(0x1b1);_0x5da4ff[_0xb1fa63(0x1da)]='';const _0x28a662=currentDate['getFullYear']();document[_0xb1fa63(0x2b7)](_0xb1fa63(0x2ad))[_0xb1fa63(0x2e5)]=_0x28a662+_0xb1fa63(0x2cb),updateYearDisplayBg(),initYearLongPress();for(let _0x5ec552=0x0;_0x5ec552<0xc;_0x5ec552++){const _0x44de11=document[_0xb1fa63(0x1ba)](_0xb1fa63(0x29d));_0x44de11[_0xb1fa63(0x2ce)]=_0xb1fa63(0x2d3),_0x44de11[_0xb1fa63(0x2e4)]=()=>{const _0x3e9fc9=_0xb1fa63;currentDate[_0x3e9fc9(0x1d1)](_0x5ec552),viewMode=_0x3e9fc9(0x2b5),document[_0x3e9fc9(0x2b7)](_0x3e9fc9(0x2ab))['style'][_0x3e9fc9(0x22c)]=_0x3e9fc9(0x2b9),document[_0x3e9fc9(0x2b7)](_0x3e9fc9(0x2a1))[_0x3e9fc9(0x29f)][_0x3e9fc9(0x22c)]=_0x3e9fc9(0x1b1),syncData();};let _0x147912='<div\x20style=\x22font-size:11px;font-weight:bold\x22>'+(_0x5ec552+0x1)+_0xb1fa63(0x26e);const _0x5dd8fe=new Date(_0x28a662,_0x5ec552,0x1)['getDay'](),_0x2a8db9=new Date(_0x28a662,_0x5ec552+0x1,0x0)['getDate']();for(let _0x4a4170=0x0;_0x4a4170<_0x5dd8fe;_0x4a4170++)_0x147912+=_0xb1fa63(0x1d3);for(let _0x22e56e=0x1;_0x22e56e<=_0x2a8db9;_0x22e56e++){let _0x205115='',_0x34d578=![];const _0x1a840c=events[_0xb1fa63(0x21f)](_0xa9e4b8=>_0xa9e4b8[_0xb1fa63(0x23a)]===_0x28a662&&_0xa9e4b8[_0xb1fa63(0x2b5)]===_0x5ec552&&_0x22e56e>=_0xa9e4b8[_0xb1fa63(0x2be)]&&_0x22e56e<=_0xa9e4b8[_0xb1fa63(0x2aa)]);if(_0x1a840c){const _0x488e14=_0x1a840c[_0xb1fa63(0x28b)]||_0xb1fa63(0x213),_0x106f39=(_0x1a840c[_0xb1fa63(0x255)]||'')+(_0x1a840c[_0xb1fa63(0x2c7)]||''),_0x3912b9=_0x5ec552+0x1,_0x166b5c=_0x22e56e,_0x5371b0=parseInt(_0x1a840c[_0xb1fa63(0x2be)])||0x0,_0x115c33=parseInt(_0x1a840c[_0xb1fa63(0x2aa)])||0x0;let _0x418e9d='';if(_0x106f39[_0xb1fa63(0x29b)]('@')){const _0x485e9c=Array[_0xb1fa63(0x1b2)](_0x106f39[_0xb1fa63(0x1ed)](/([^@\s]*?)@\s*(\d+月\d+日|\d+号|第?\d+)/g));for(let _0x4f34ab of _0x485e9c){const _0x41e1d0=_0x4f34ab[0x1],_0x1c4f06=_0x4f34ab[0x2];let _0x30bc47=![];if(_0x1c4f06[_0xb1fa63(0x29b)]('月')){const _0x4ba1b9=_0x1c4f06[_0xb1fa63(0x2d8)](/(\d+)月(\d+)日/);if(_0x4ba1b9&&_0x3912b9===parseInt(_0x4ba1b9[0x1])&&_0x166b5c===parseInt(_0x4ba1b9[0x2]))_0x30bc47=!![];}else{if(_0x1c4f06[_0xb1fa63(0x29b)]('号')){const _0x3e9f53=_0x1c4f06[_0xb1fa63(0x2d8)](/(\d+)号/);if(_0x3e9f53&&_0x166b5c===parseInt(_0x3e9f53[0x1]))_0x30bc47=!![];}else{const _0x1da3d9=_0x1c4f06['match'](/第?(\d+)/);if(_0x1da3d9&&_0x166b5c===_0x5371b0+parseInt(_0x1da3d9[0x1])-0x1)_0x30bc47=!![];}}if(_0x30bc47){_0x34d578=!![];if(_0x41e1d0[_0xb1fa63(0x29b)]('生日'))_0x418e9d='🎂';else{if(_0x41e1d0['includes']('夺冠')||_0x41e1d0['includes']('金牌'))_0x418e9d='🏆';else{if(_0x41e1d0[_0xb1fa63(0x29b)]('表彰')||_0x41e1d0[_0xb1fa63(0x29b)]('荣誉'))_0x418e9d='🎖';else{if(_0x41e1d0['includes']('杂志')||_0x41e1d0[_0xb1fa63(0x29b)]('拍摄'))_0x418e9d='📸';else{if(_0x41e1d0['includes']('飞')||_0x41e1d0[_0xb1fa63(0x29b)]('返'))_0x418e9d='🛫';else{if(_0x41e1d0[_0xb1fa63(0x29b)]('截止'))_0x418e9d='🚩';else{if(_0x41e1d0[_0xb1fa63(0x29b)]('★'))_0x418e9d='★';else{if(_0x41e1d0[_0xb1fa63(0x29b)]('休')||_0x41e1d0[_0xb1fa63(0x29b)]('假'))_0x418e9d=_0xb1fa63(0x22b);}}}}}}}break;}}}if(!_0x34d578&&!_0x106f39['includes']('@')){if(_0x106f39[_0xb1fa63(0x29b)]('🚩')||_0x106f39['includes']('★'))_0x166b5c===_0x115c33&&(_0x34d578=!![],_0x418e9d=_0x106f39[_0xb1fa63(0x29b)]('🚩')?'🚩':'★');else{if(_0x106f39['includes']('休')||_0x106f39[_0xb1fa63(0x29b)]('假'))_0x34d578=!![],_0x418e9d='🏖️';else{if(_0x166b5c===_0x5371b0){_0x34d578=!![];if(_0x106f39['includes']('生日'))_0x418e9d='🎂';else{if(_0x106f39[_0xb1fa63(0x29b)]('夺冠')||_0x106f39[_0xb1fa63(0x29b)]('金牌'))_0x418e9d='🏆';else{if(_0x106f39[_0xb1fa63(0x29b)]('表彰')||_0x106f39[_0xb1fa63(0x29b)]('荣誉'))_0x418e9d='🎖';else{if(_0x106f39[_0xb1fa63(0x29b)]('杂志')||_0x106f39[_0xb1fa63(0x29b)]('拍摄'))_0x418e9d='📸';else{if(_0x106f39[_0xb1fa63(0x29b)]('飞')||_0x106f39[_0xb1fa63(0x29b)]('返'))_0x418e9d='🛫';}}}}}}}}if(_0x34d578&&_0x418e9d){let _0x46b593=_0x488e14==='transparent'||_0x488e14[_0xb1fa63(0x29b)]('rgba')||_0x488e14===_0xb1fa63(0x1cb)?_0xb1fa63(0x216):_0x488e14;_0x205115=_0xb1fa63(0x2a6)+_0x46b593+_0xb1fa63(0x2c1)+_0x418e9d+'</div>';}else{let _0x8ef402=_0x488e14===_0xb1fa63(0x23c)?_0xb1fa63(0x282):_0x488e14;_0x205115=_0xb1fa63(0x236)+_0x8ef402+_0xb1fa63(0x2cd);}}_0x147912+='<div\x20class=\x22ym-day\x22>'+_0x22e56e+_0x205115+_0xb1fa63(0x239);}_0x44de11[_0xb1fa63(0x1da)]=_0x147912+_0xb1fa63(0x239),_0x5da4ff[_0xb1fa63(0x22a)](_0x44de11);}}function handleCellClick(_0x2b7eae){const _0x6daa3c=_0x347be7;if(!isAdmin)return;selection['length']===0x0?(selection['push'](_0x2b7eae),document[_0x6daa3c(0x2b7)](_0x6daa3c(0x2d6)+_0x2b7eae)[_0x6daa3c(0x1d0)]['add']('selected')):openEditModal(null,Math['min'](selection[0x0],_0x2b7eae),Math['max'](selection[0x0],_0x2b7eae));}function closeModal(){const _0x2d5989=_0x347be7;document[_0x2d5989(0x2b7)](_0x2d5989(0x22f))[_0x2d5989(0x29f)][_0x2d5989(0x22c)]=_0x2d5989(0x1b1),document[_0x2d5989(0x2b7)](_0x2d5989(0x264))[_0x2d5989(0x29f)][_0x2d5989(0x22c)]=_0x2d5989(0x1b1),selection=[],document[_0x2d5989(0x1e2)](_0x2d5989(0x25a))[_0x2d5989(0x241)](_0x52dc32=>_0x52dc32[_0x2d5989(0x1d0)][_0x2d5989(0x1dd)](_0x2d5989(0x28d)));}async function deleteEvent(){const _0x10dba3=_0x347be7,_0x2a1e8e=sessionStorage['getItem']('admin_temp_pass');if(!_0x2a1e8e)return alert(_0x10dba3(0x1f1));if(confirm(_0x10dba3(0x2e2)))try{const {error:_0x2d557e}=await _db[_0x10dba3(0x226)](_0x10dba3(0x249),{'input_password':_0x2a1e8e,'event_id':String(editingId)});if(_0x2d557e)throw _0x2d557e;closeModal(),syncData(),console['log'](_0x10dba3(0x1fa));}catch(_0x388f92){console['error'](_0x10dba3(0x2cf),_0x388f92),alert(_0x10dba3(0x289)+_0x388f92[_0x10dba3(0x26a)]);}}function changeMonth(_0x3b88b0){const _0x351514=_0x347be7;typeof viewMode!==_0x351514(0x274)&&viewMode==='year'?currentDate[_0x351514(0x1fe)](currentDate[_0x351514(0x201)]()+_0x3b88b0):currentDate[_0x351514(0x1d1)](currentDate[_0x351514(0x20b)]()+_0x3b88b0),syncData();}let tempTitleStyle={'color':_0x347be7(0x2b1),'fontSize':_0x347be7(0x2d5)},currentLogoBase64=null;function imgCompress(_0x3b5c45,_0x71cdf,_0x37d050){const _0x3fdd0c=_0x347be7,_0x4c2893=new FileReader();_0x4c2893[_0x3fdd0c(0x223)]=_0xb322f6=>{const _0x45708b=_0x3fdd0c,_0x22e0c1=new Image();_0x22e0c1['src']=_0xb322f6[_0x45708b(0x251)][_0x45708b(0x244)],_0x22e0c1[_0x45708b(0x223)]=()=>{const _0x39ed22=_0x45708b,_0x150994=document[_0x39ed22(0x1ba)](_0x39ed22(0x294)),_0x2cbfcc=_0x150994['getContext']('2d');if(_0x22e0c1[_0x39ed22(0x2e3)]<=_0x71cdf){_0x37d050(_0xb322f6[_0x39ed22(0x251)]['result']);return;}const _0x575ec4=_0x71cdf/_0x22e0c1[_0x39ed22(0x2e3)];_0x150994[_0x39ed22(0x2e3)]=_0x71cdf,_0x150994[_0x39ed22(0x25f)]=_0x22e0c1[_0x39ed22(0x25f)]*_0x575ec4,_0x2cbfcc[_0x39ed22(0x1c5)](_0x22e0c1,0x0,0x0,_0x150994[_0x39ed22(0x2e3)],_0x150994[_0x39ed22(0x25f)]),_0x37d050(_0x150994['toDataURL']('image/png'));};},_0x4c2893[_0x3fdd0c(0x2b8)](_0x3b5c45);}function triggerLogoUpload(){const _0x3a11d1=_0x347be7;if(!isAdmin)return alert(_0x3a11d1(0x2b3));const _0x564bf8=document[_0x3a11d1(0x1ba)]('input');_0x564bf8[_0x3a11d1(0x24c)]='file',_0x564bf8['accept']=_0x3a11d1(0x25b),_0x564bf8['onchange']=_0x7beb56=>{const _0x51fbbe=_0x3a11d1,_0x1fca55=_0x7beb56[_0x51fbbe(0x251)][_0x51fbbe(0x272)][0x0];if(!_0x1fca55)return;imgCompress(_0x1fca55,0x190,_0x438829=>{const _0x52b3a8=_0x51fbbe;currentLogoBase64=_0x438829;const _0x46e3fd=document['getElementById'](_0x52b3a8(0x227));_0x46e3fd&&(_0x46e3fd['src']=_0x438829,_0x46e3fd[_0x52b3a8(0x29f)]['display']=_0x52b3a8(0x2b9)),document[_0x52b3a8(0x2b7)]('logoUploadText')['innerText']=_0x52b3a8(0x2bd),document[_0x52b3a8(0x2b7)](_0x52b3a8(0x1f7))['style'][_0x52b3a8(0x22c)]=_0x52b3a8(0x2b9);});},_0x564bf8[_0x3a11d1(0x293)]();}function deleteLogo(){const _0x33b73f=_0x347be7;currentLogoBase64=null,document['getElementById'](_0x33b73f(0x227))[_0x33b73f(0x29f)]['display']='none',document[_0x33b73f(0x2b7)]('logoUploadText')['innerText']='点击上传\x20LOGO\x20图片',document[_0x33b73f(0x2b7)](_0x33b73f(0x1f7))[_0x33b73f(0x29f)][_0x33b73f(0x22c)]=_0x33b73f(0x1b1);}function openNameModal(){const _0x36fdab=_0x347be7;if(!isAdmin)return alert(_0x36fdab(0x204));const _0x36b8c5=document[_0x36fdab(0x2b7)](_0x36fdab(0x2e6)),_0x580120=document['getElementById'](_0x36fdab(0x1d6)),_0x4ff6c1=document[_0x36fdab(0x2b7)](_0x36fdab(0x1c6));_0x580120[_0x36fdab(0x270)]=_0x36b8c5['innerText']===_0x36fdab(0x219)?'':_0x36b8c5['innerText'],_0x580120[_0x36fdab(0x29f)][_0x36fdab(0x298)]=_0x36b8c5[_0x36fdab(0x29f)][_0x36fdab(0x298)]||_0x36fdab(0x2b1),_0x580120[_0x36fdab(0x29f)][_0x36fdab(0x1ff)]=_0x36b8c5[_0x36fdab(0x29f)][_0x36fdab(0x1ff)]||_0x36fdab(0x2d5),_0x4ff6c1&&_0x4ff6c1[_0x36fdab(0x29f)][_0x36fdab(0x22c)]===_0x36fdab(0x1de)?(document[_0x36fdab(0x2b7)]('logoEditPreview')[_0x36fdab(0x234)]=_0x4ff6c1[_0x36fdab(0x234)],document['getElementById'](_0x36fdab(0x227))[_0x36fdab(0x29f)][_0x36fdab(0x22c)]=_0x36fdab(0x2b9),document[_0x36fdab(0x2b7)]('logoUploadText')[_0x36fdab(0x2e5)]='点击更换\x20LOGO',document['getElementById'](_0x36fdab(0x1f7))[_0x36fdab(0x29f)]['display']=_0x36fdab(0x2b9),currentLogoBase64=_0x4ff6c1['src']):deleteLogo(),document[_0x36fdab(0x2b7)]('modal-overlay')[_0x36fdab(0x29f)]['display']='block',document[_0x36fdab(0x2b7)](_0x36fdab(0x1db))['style'][_0x36fdab(0x22c)]=_0x36fdab(0x2b9);}function closeNameModal(){const _0x1426e0=_0x347be7;document['getElementById']('modal-overlay')[_0x1426e0(0x29f)]['display']=_0x1426e0(0x1b1),document[_0x1426e0(0x2b7)]('name-modal')[_0x1426e0(0x29f)][_0x1426e0(0x22c)]=_0x1426e0(0x1b1);}function setTitleStyle(_0x4a414d,_0x182136){const _0x3e4116=_0x347be7,_0x37393b=document[_0x3e4116(0x2b7)](_0x3e4116(0x1d6));if(_0x37393b)_0x37393b[_0x3e4116(0x29f)][_0x4a414d]=_0x182136;tempTitleStyle[_0x4a414d]=_0x182136;}async function dbSaveCalendarName(){const _0x2055cd=_0x347be7,_0x43be90=document['getElementById'](_0x2055cd(0x1d6))[_0x2055cd(0x270)]||_0x2055cd(0x219),_0x227007={'text':_0x43be90,'color':tempTitleStyle[_0x2055cd(0x298)],'fontSize':tempTitleStyle[_0x2055cd(0x1ff)],'logo':currentLogoBase64},_0x4c52f0=sessionStorage['getItem'](_0x2055cd(0x2b4));if(!_0x4c52f0){alert(_0x2055cd(0x291));return;}try{const {error:_0x53bf3f}=await _db[_0x2055cd(0x226)](_0x2055cd(0x237),{'input_password':_0x4c52f0,'config_id':_0x2055cd(0x1b4),'new_value':JSON[_0x2055cd(0x292)](_0x227007)});if(_0x53bf3f)throw _0x53bf3f;localStorage[_0x2055cd(0x1cd)](_0x2055cd(0x1ea),JSON[_0x2055cd(0x292)](_0x227007)),closeNameModal(),location[_0x2055cd(0x1cf)]();}catch(_0x46b154){console[_0x2055cd(0x25d)](_0x2055cd(0x283),_0x46b154['message']),alert(_0x2055cd(0x2cc)+_0x46b154[_0x2055cd(0x26a)]);}}async function dbLoadCalendarName(){const _0x339b68=_0x347be7,_0x3bcd09=document[_0x339b68(0x2b7)]('calendarNameDisplay'),_0x189b69=document['getElementById'](_0x339b68(0x1c6)),_0x17cb63=_0xe6a13a=>{const _0x18d2d7=_0x339b68;if(!_0xe6a13a)return;try{const _0x48c8d7=JSON[_0x18d2d7(0x1e6)](_0xe6a13a);typeof _0x48c8d7==='object'&&_0x48c8d7!==null?(_0x3bcd09[_0x18d2d7(0x2e5)]=_0x48c8d7[_0x18d2d7(0x255)]||_0x18d2d7(0x219),_0x3bcd09[_0x18d2d7(0x29f)][_0x18d2d7(0x298)]=_0x48c8d7[_0x18d2d7(0x298)]||_0x18d2d7(0x2b1),_0x3bcd09[_0x18d2d7(0x29f)][_0x18d2d7(0x1ff)]=_0x48c8d7[_0x18d2d7(0x1ff)]||_0x18d2d7(0x2d5),tempTitleStyle={'color':_0x48c8d7['color'],'fontSize':_0x48c8d7[_0x18d2d7(0x1ff)]},_0x48c8d7['logo']&&_0x189b69&&(_0x189b69[_0x18d2d7(0x234)]=_0x48c8d7[_0x18d2d7(0x1ca)],_0x189b69[_0x18d2d7(0x29f)]['display']='inline-block')):_0x3bcd09[_0x18d2d7(0x2e5)]=_0xe6a13a;}catch(_0x19ee84){_0x3bcd09[_0x18d2d7(0x2e5)]=_0xe6a13a;}},_0x230eec=localStorage['getItem'](_0x339b68(0x1ea));if(_0x230eec)_0x17cb63(_0x230eec);try{const {data:_0x1693c6,error:_0x48fb54}=await _db[_0x339b68(0x1b2)](_0x339b68(0x2c5))['select'](_0x339b68(0x270))['eq']('id',_0x339b68(0x1b4))[_0x339b68(0x1b7)]();!_0x48fb54&&_0x1693c6&&_0x1693c6[_0x339b68(0x270)]&&(_0x17cb63(_0x1693c6['value']),localStorage[_0x339b68(0x1cd)]('customCalendarNameData',_0x1693c6[_0x339b68(0x270)]));}catch(_0x39213a){console['log'](_0x339b68(0x246));}}async function initApp(){const _0x4324ef=_0x347be7;dbLoadCalendarName(),viewMode=_0x4324ef(0x23a),renderYear(),updateDisplayBg();const _0x1cf55a=async()=>{const _0x5378fd=_0x4324ef;try{await syncData(),renderYear();}catch(_0x23bf7d){console['log'](_0x5378fd(0x27e),_0x23bf7d);}};_0x1cf55a();const _0xbfa0d9=_0xaf5753=>{const _0x52256c=_0x4324ef,_0x17db97=document[_0x52256c(0x2b7)](_0xaf5753);if(!_0x17db97)return;let _0x14ae8=null,_0x54ff37=![];const _0x39764a=_0x46c657=>{_0x54ff37=![],_0x14ae8=setTimeout(()=>{const _0x1b9e4f=_0x5e14;_0x54ff37=!![];if(typeof quickJump===_0x1b9e4f(0x2ae))quickJump();},0x258);},_0x4d6204=()=>{if(_0x14ae8)clearTimeout(_0x14ae8);};_0x17db97['onmousedown']=_0x17db97['ontouchstart']=_0x39764a,_0x17db97[_0x52256c(0x27f)]=_0x17db97[_0x52256c(0x22e)]=_0x17db97[_0x52256c(0x254)]=_0x4d6204,_0x17db97[_0x52256c(0x1f2)]=_0x224a74=>{const _0x2edfe7=_0x52256c;if(_0x54ff37)_0x224a74[_0x2edfe7(0x1d7)]();};};_0xbfa0d9('prevBtn'),_0xbfa0d9(_0x4324ef(0x2a9)),setTimeout(()=>{const _0x1f59cd=_0x4324ef;viewMode=_0x1f59cd(0x2b5);const _0x46f37c=document['getElementById'](_0x1f59cd(0x2a1)),_0x3834b1=document[_0x1f59cd(0x2b7)](_0x1f59cd(0x2ab));if(_0x46f37c)_0x46f37c['style'][_0x1f59cd(0x22c)]=_0x1f59cd(0x1b1);if(_0x3834b1)_0x3834b1[_0x1f59cd(0x29f)][_0x1f59cd(0x22c)]=_0x1f59cd(0x2b9);currentDate=new Date(),renderCalendar(),updateDisplayBg(),console[_0x1f59cd(0x209)](_0x1f59cd(0x1d2));},0x9c4);}initApp(),window[_0x347be7(0x2d1)]=function(_0x23a339){const _0xed0888=_0x347be7,_0xb5cadc=document[_0xed0888(0x2b7)](_0xed0888(0x230)),_0x326725=document[_0xed0888(0x2b7)]('noteDetailContent');if(!_0xb5cadc||!_0x326725||!_0x23a339)return;const _0xaa0097=parseInt(_0x23a339[_0xed0888(0x2be)]),_0x8322fd=parseInt(_0x23a339['end']),_0x4d662b=_0x23a339[_0xed0888(0x2b5)]!==undefined?parseInt(_0x23a339['month'])+0x1:'',_0x2efe5a=_0x23a339[_0xed0888(0x23a)]||'',_0x242bfc=_0xaa0097===_0x8322fd?_0x4d662b+'月'+_0xaa0097+'日':_0x4d662b+'月'+_0xaa0097+'日至'+_0x8322fd+'日',_0x28d3df=_0x23a339['content']&&_0x23a339[_0xed0888(0x2c7)]!==_0xed0888(0x25c)&&_0x23a339['content'][_0xed0888(0x1bf)]()[_0xed0888(0x296)]>0x0,_0x4b6104=_0x28d3df?_0x23a339[_0xed0888(0x2c7)]:_0xed0888(0x243);_0x326725[_0xed0888(0x1da)]=_0xed0888(0x1bb)+_0x2efe5a+'年\x20'+_0x242bfc+_0xed0888(0x27d)+(_0x23a339[_0xed0888(0x255)]||_0xed0888(0x25e))+_0xed0888(0x222)+_0x4b6104+_0xed0888(0x2bf),_0xb5cadc[_0xed0888(0x29f)][_0xed0888(0x22c)]=_0xed0888(0x2b9);},window[_0x347be7(0x2d9)]=function(){const _0x55f0d8=_0x347be7,_0x30bf26=document['getElementById'](_0x55f0d8(0x230));if(_0x30bf26)_0x30bf26[_0x55f0d8(0x29f)][_0x55f0d8(0x22c)]=_0x55f0d8(0x1b1);};function _0x5e14(_0x3c353a,_0x4de463){_0x3c353a=_0x3c353a-0x1b0;const _0x23d99e=_0x23d9();let _0x5e1417=_0x23d99e[_0x3c353a];return _0x5e1417;}function quickJump(){const _0x53ccac=_0x347be7;if(viewMode===_0x53ccac(0x23a)){const _0x61ed9=prompt('🚀\x20快速跳转年份:',currentDate['getFullYear']());_0x61ed9&&!isNaN(_0x61ed9)&&(currentDate[_0x53ccac(0x1fe)](parseInt(_0x61ed9)),syncData());}else{const _0x15857c=currentDate[_0x53ccac(0x201)](),_0x4b99c0=currentDate[_0x53ccac(0x20b)]()+0x1,_0x364fe0=prompt(_0x53ccac(0x1e5),_0x15857c+'.'+_0x4b99c0);if(_0x364fe0&&_0x364fe0[_0x53ccac(0x29b)]('.')){const [_0x394f9e,_0xbf1237]=_0x364fe0[_0x53ccac(0x286)]('.');!isNaN(_0x394f9e)&&!isNaN(_0xbf1237)&&(currentDate[_0x53ccac(0x1fe)](parseInt(_0x394f9e)),currentDate[_0x53ccac(0x1d1)](parseInt(_0xbf1237)-0x1),syncData());}}}setTimeout(()=>{const _0x41a5bf=_0x347be7,_0x21a6ed=document[_0x41a5bf(0x2b7)]('calendar-title');if(!_0x21a6ed)return;const _0xec7861=_0x21a6ed[_0x41a5bf(0x2e5)][_0x41a5bf(0x1bf)]();isAdmin&&(_0xec7861===''||_0xec7861===_0x41a5bf(0x2df))&&(_0x21a6ed[_0x41a5bf(0x2e5)]=_0x41a5bf(0x219));},0x3e8);async function changeYearBg(){const _0x30adbb=_0x347be7,_0x3a121b=sessionStorage['getItem'](_0x30adbb(0x2b4));if(!_0x3a121b)return alert(_0x30adbb(0x2b3));const _0x336364=document[_0x30adbb(0x1ba)](_0x30adbb(0x2dc));_0x336364[_0x30adbb(0x24c)]='file',_0x336364[_0x30adbb(0x257)]=_0x30adbb(0x25b),_0x336364[_0x30adbb(0x280)]=async _0x17dc21=>{const _0x39340b=_0x30adbb,_0x316f66=_0x17dc21[_0x39340b(0x251)][_0x39340b(0x272)][0x0];if(!_0x316f66)return;const _0x2e4de4=_0x39340b(0x1ce)+currentDate[_0x39340b(0x201)]()+_0x39340b(0x2a4),_0x83b7de=_0x316f66[_0x39340b(0x24c)]===_0x39340b(0x2af)?_0x39340b(0x2e1):_0x39340b(0x1e4),_0x5ee055=_0x2e4de4+'_'+Date[_0x39340b(0x220)]()+'.'+_0x83b7de,_0x14ccf9=document[_0x39340b(0x2b7)](_0x39340b(0x1d5));_0x14ccf9[_0x39340b(0x2e5)]=_0x39340b(0x1e1);if(_0x316f66['type']===_0x39340b(0x2af)||_0x316f66[_0x39340b(0x27a)]<=0xc8*0x400)await uploadProcess(_0x316f66,_0x5ee055,_0x316f66[_0x39340b(0x24c)],_0x2e4de4);else{const _0xe86676=new FileReader();_0xe86676[_0x39340b(0x2b8)](_0x316f66),_0xe86676['onload']=_0x1412a6=>{const _0x551d84=_0x39340b,_0x8058ec=new Image();_0x8058ec[_0x551d84(0x234)]=_0x1412a6[_0x551d84(0x251)][_0x551d84(0x244)],_0x8058ec[_0x551d84(0x223)]=()=>{const _0x4727e2=_0x551d84,_0x529ec1=document[_0x4727e2(0x1ba)](_0x4727e2(0x294)),_0x30fa2c=_0x529ec1['getContext']('2d'),_0x4557a2=Math['min'](0x1,0x780/_0x8058ec[_0x4727e2(0x2e3)]);_0x529ec1[_0x4727e2(0x2e3)]=_0x8058ec[_0x4727e2(0x2e3)]*_0x4557a2,_0x529ec1[_0x4727e2(0x25f)]=_0x8058ec[_0x4727e2(0x25f)]*_0x4557a2,_0x30fa2c[_0x4727e2(0x1c5)](_0x8058ec,0x0,0x0,_0x529ec1[_0x4727e2(0x2e3)],_0x529ec1[_0x4727e2(0x25f)]),_0x529ec1[_0x4727e2(0x288)](_0x121837=>{const _0x5f304d=_0x4727e2;uploadProcess(_0x121837,_0x5ee055,_0x5f304d(0x208),_0x2e4de4);},'image/jpeg',0.8);};};}_0x14ccf9['innerText']=_0x39340b(0x21d),setTimeout(()=>{updateYearDisplayBg();},0x3e8);},_0x336364['click']();}function previewYearStyle(){const _0x4a8028=_0x347be7,_0x2841ac=document[_0x4a8028(0x2b7)](_0x4a8028(0x259))[_0x4a8028(0x270)],_0x878fc7=document['getElementById']('yearBrightInp')['value'],_0x5622a6=document[_0x4a8028(0x2b7)](_0x4a8028(0x287))['value'],_0x3a5e96=document[_0x4a8028(0x2b7)](_0x4a8028(0x1c1))?.[_0x4a8028(0x270)]||0x33;document[_0x4a8028(0x2b7)](_0x4a8028(0x260))['innerText']=_0x2841ac,document['getElementById'](_0x4a8028(0x266))[_0x4a8028(0x2e5)]=_0x878fc7,document[_0x4a8028(0x2b7)]('valCardAlpha')[_0x4a8028(0x2e5)]=_0x5622a6;const _0x54cfd3=document[_0x4a8028(0x2da)];_0x54cfd3[_0x4a8028(0x29f)][_0x4a8028(0x1b3)](_0x4a8028(0x268),_0x2841ac+'px'),_0x54cfd3['style'][_0x4a8028(0x1b3)]('--bg-bright',_0x878fc7),_0x54cfd3['style'][_0x4a8028(0x1b3)](_0x4a8028(0x1f8),_0x4a8028(0x28f)+_0x5622a6+')'),_0x54cfd3[_0x4a8028(0x29f)][_0x4a8028(0x1b3)](_0x4a8028(0x258),_0x4a8028(0x281)+_0x3a5e96+',\x20'+_0x3a5e96+',\x20'+_0x3a5e96+')');const _0x143183=document[_0x4a8028(0x2b7)](_0x4a8028(0x21c));if(_0x143183){const _0x324770=_0x4a8028(0x1ce)+currentDate[_0x4a8028(0x201)]()+_0x4a8028(0x2a4),_0x218048=localStorage[_0x4a8028(0x2c2)](getCacheKey(_0x324770));if(_0x218048)_0x143183['style'][_0x4a8028(0x253)]=_0x4a8028(0x1f3)+_0x218048+'\x27)';}}async function updateYearDisplayBg(){const _0x584f85=_0x347be7,_0x1950b2=currentDate['getFullYear'](),_0x5702c2='bg_'+_0x1950b2+_0x584f85(0x2a4),_0x177159='bg_'+_0x1950b2+_0x584f85(0x24b);try{let _0x51d020=localStorage[_0x584f85(0x2c2)](getCacheKey(_0x5702c2));if(!_0x51d020){const {data:_0x15a8c4}=await _db['from'](_0x584f85(0x2c5))[_0x584f85(0x1c0)](_0x584f85(0x270))['eq']('id',_0x5702c2)['maybeSingle']();_0x15a8c4&&_0x15a8c4['value']&&(_0x51d020=_0x15a8c4[_0x584f85(0x270)],localStorage[_0x584f85(0x1cd)](getCacheKey(_0x5702c2),_0x51d020));}let _0xaf6c47={'blur':0x0,'brightness':0x1};const _0x551d28=localStorage[_0x584f85(0x2c2)](getCacheKey(_0x177159));if(_0x551d28)_0xaf6c47=JSON['parse'](_0x551d28);else{const {data:_0x1dc74b}=await _db[_0x584f85(0x1b2)](_0x584f85(0x2c5))[_0x584f85(0x1c0)](_0x584f85(0x270))['eq']('id',_0x177159)[_0x584f85(0x1b7)]();_0x1dc74b&&_0x1dc74b[_0x584f85(0x270)]&&(_0xaf6c47=JSON['parse'](_0x1dc74b['value']),localStorage[_0x584f85(0x1cd)](getCacheKey(_0x177159),_0x1dc74b[_0x584f85(0x270)]));}const _0x1dd240=document[_0x584f85(0x2b7)](_0x584f85(0x21c));if(_0x1dd240&&_0x51d020){_0x1dd240[_0x584f85(0x29f)][_0x584f85(0x253)]=_0x584f85(0x1f3)+_0x51d020+'\x27)';const _0x5b101f=(_0xaf6c47[_0x584f85(0x2a0)]||0x0)+'px',_0x19961c=_0xaf6c47[_0x584f85(0x2a5)]||0x1,_0x518175=_0xaf6c47[_0x584f85(0x21e)]||0.2;document['documentElement']['style'][_0x584f85(0x1b3)](_0x584f85(0x268),_0x5b101f),document[_0x584f85(0x2da)][_0x584f85(0x29f)][_0x584f85(0x1b3)](_0x584f85(0x252),_0x19961c),document[_0x584f85(0x2da)][_0x584f85(0x29f)][_0x584f85(0x1b3)]('--year-card-bg',_0x584f85(0x28f)+_0x518175+')'),document[_0x584f85(0x1e2)](_0x584f85(0x278))['forEach'](_0x403749=>{const _0x336aa7=_0x584f85;_0x403749[_0x336aa7(0x29f)][_0x336aa7(0x1c7)]=_0x336aa7(0x28f)+_0x518175+')';}),_0x1dd240[_0x584f85(0x29f)][_0x584f85(0x1b3)](_0x584f85(0x268),_0x5b101f),_0x1dd240['style'][_0x584f85(0x1b3)](_0x584f85(0x252),_0x19961c);const _0x26ef33=document['getElementById'](_0x584f85(0x1d9));if(_0x26ef33)_0x26ef33['classList'][_0x584f85(0x202)]('has-bg');}}catch(_0xd79270){console[_0x584f85(0x209)](_0x584f85(0x2c0),_0xd79270);}}let yearLongPressTimer;function bindYearHeaderLongPress(){const _0x31b351=_0x347be7,_0x1f8aaa=document[_0x31b351(0x269)](_0x31b351(0x2c4))||document['getElementById'](_0x31b351(0x261));if(!_0x1f8aaa){console[_0x31b351(0x209)](_0x31b351(0x1b8));return;}_0x1f8aaa[_0x31b351(0x1d8)]=()=>{yearLongPressTimer=setTimeout(openYearAdmin,0x320);},_0x1f8aaa['ontouchend']=()=>clearTimeout(yearLongPressTimer),_0x1f8aaa[_0x31b351(0x1eb)]=()=>{yearLongPressTimer=setTimeout(openYearAdmin,0x320);},_0x1f8aaa[_0x31b351(0x27f)]=()=>clearTimeout(yearLongPressTimer);}function initYearLongPress(){const _0x189123=_0x347be7,_0x4f05d5=document[_0x189123(0x2b7)](_0x189123(0x2ad));if(!_0x4f05d5)return;let _0x182559,_0x1b7c28=![];const _0x30af93=_0x11b403=>{const _0x51c75a=_0x189123;_0x4f05d5[_0x51c75a(0x2e5)][_0x51c75a(0x29b)](_0x51c75a(0x2cb))&&(_0x1b7c28=!![],openYearAdmin(),_0x11b403&&(_0x11b403[_0x51c75a(0x1d7)](),_0x11b403[_0x51c75a(0x22d)]()));};_0x4f05d5[_0x189123(0x1d8)]=_0x478c4d=>{_0x1b7c28=![],_0x182559=setTimeout(()=>_0x30af93(_0x478c4d),0x320);},_0x4f05d5[_0x189123(0x254)]=_0x399c1b=>{const _0x1c2658=_0x189123;_0x1b7c28&&_0x399c1b[_0x1c2658(0x1d7)](),clearTimeout(_0x182559);},_0x4f05d5[_0x189123(0x1eb)]=_0x4d6800=>{_0x1b7c28=![],_0x182559=setTimeout(()=>_0x30af93(_0x4d6800),0x320);},_0x4f05d5[_0x189123(0x27f)]=_0x36c7bf=>{const _0x1fb44a=_0x189123;_0x1b7c28&&window[_0x1fb44a(0x1f5)]('click',_0x2f046c,!![]),clearTimeout(_0x182559);};function _0x2f046c(_0x355ec7){const _0x2157d8=_0x189123;_0x355ec7[_0x2157d8(0x22d)](),window[_0x2157d8(0x20d)](_0x2157d8(0x293),_0x2f046c,!![]);}}function openYearAdmin(){const _0x167697=_0x347be7,_0x3954b7=sessionStorage[_0x167697(0x2c2)](_0x167697(0x2b4));if(!_0x3954b7)return alert(_0x167697(0x21a));const _0x1887a6=document[_0x167697(0x2b7)](_0x167697(0x231));if(_0x1887a6){_0x1887a6[_0x167697(0x29f)]['display']=_0x167697(0x2b9);const _0x2b7c2c=currentDate['getFullYear'](),_0x361bce=localStorage[_0x167697(0x2c2)](getCacheKey(_0x167697(0x1ce)+_0x2b7c2c+_0x167697(0x24b)));if(_0x361bce){const _0x39d94c=JSON['parse'](_0x361bce);document['getElementById'](_0x167697(0x259))[_0x167697(0x270)]=_0x39d94c['blur']||0x0,document[_0x167697(0x2b7)](_0x167697(0x247))[_0x167697(0x270)]=_0x39d94c[_0x167697(0x2a5)]||0x1,previewYearStyle();}}}const observer=new MutationObserver(()=>{const _0x2e4ced=_0x347be7,_0x59b839=document[_0x2e4ced(0x2b7)](_0x2e4ced(0x2ad)),_0x44da39=_0x59b839&&_0x59b839['innerText'][_0x2e4ced(0x29b)](_0x2e4ced(0x2cb));if(_0x44da39){const _0xad9ee5=document[_0x2e4ced(0x2b7)](_0x2e4ced(0x21c)),_0x43aa2e=_0x2e4ced(0x1ce)+currentDate[_0x2e4ced(0x201)]()+_0x2e4ced(0x2a4);_0xad9ee5&&!_0xad9ee5[_0x2e4ced(0x29f)][_0x2e4ced(0x253)][_0x2e4ced(0x29b)]('_year')&&updateYearDisplayBg();}}),targetNode=document[_0x347be7(0x2b7)](_0x347be7(0x2ad));targetNode&&observer[_0x347be7(0x275)](targetNode,{'childList':!![],'characterData':!![],'subtree':!![]});async function saveYearSettings(){const _0x4fbbce=_0x347be7,_0x53c732=sessionStorage['getItem']('admin_temp_pass');if(!_0x53c732)return alert('🔒\x20请先解锁管理员权限');try{const _0x246499=currentDate[_0x4fbbce(0x201)](),_0x7185ce=document[_0x4fbbce(0x2b7)]('yearBlurInp')[_0x4fbbce(0x270)],_0x5bae95=document[_0x4fbbce(0x2b7)](_0x4fbbce(0x247))[_0x4fbbce(0x270)],_0x2e8c6d=document[_0x4fbbce(0x2b7)]('yearCardAlphaInp')[_0x4fbbce(0x270)],_0x2b5865='bg_'+_0x246499+_0x4fbbce(0x24b),_0x3f214e=JSON[_0x4fbbce(0x292)]({'blur':_0x7185ce,'brightness':_0x5bae95,'cardAlpha':_0x2e8c6d});console[_0x4fbbce(0x209)](_0x4fbbce(0x1dc),_0x2b5865,_0x3f214e),await _db['rpc'](_0x4fbbce(0x237),{'input_password':_0x53c732,'config_id':_0x2b5865,'new_value':_0x3f214e}),localStorage[_0x4fbbce(0x1cd)](getCacheKey(_0x2b5865),_0x3f214e),alert(_0x4fbbce(0x27b)),document[_0x4fbbce(0x2b7)](_0x4fbbce(0x231))[_0x4fbbce(0x29f)]['display']=_0x4fbbce(0x1b1),typeof updateYearDisplayBg===_0x4fbbce(0x2ae)&&await updateYearDisplayBg();}catch(_0x16c83f){console[_0x4fbbce(0x25d)](_0x4fbbce(0x1bd),_0x16c83f),alert(_0x4fbbce(0x2d2));}}
+        const S_URL = "https://cnbarxcyhtuyympqwspb.supabase.co";
+        const S_KEY = "sb_publishable_8lKRoBeyMpq8UEYugqvn7g_3_iImIur";
+        const _db = supabase.createClient(S_URL, S_KEY);
+
+        // --- 就在这里加入身份证生成器 ---
+function getCacheKey(bgId) {
+    // 提取 S_URL 中的项目标识（例如从 https://xyz.supabase.co 提取出 xyz）
+    const dbIdentity = S_URL.split('.')[0].split('//')[1] || 'default'; 
+    return `${dbIdentity}_${bgId}`;
+}
+// ----------------------------
+
+        let currentDate = new Date(), viewMode = 'month', selection = [], currentBarColor = '#B2F2BB', editingId = null, events = [];
+        
+        const checkAuth = () => {
+    try {
+        // 1. 获取当前内存里的暗号状态
+        let tempPass = sessionStorage.getItem('admin_temp_pass');
+        
+        // 2. 获取本地长期存储的数据
+        const auth = localStorage.getItem('admin_auth_data');
+        
+        if (auth) {
+            const data = JSON.parse(auth);
+            // 3. 检查 24 小时有效期
+            if (Date.now() - data.loginTime < 86400000) {
+                
+                // 【核心改进】：
+                // 如果内存里的暗号丢了（切换App/刷新），但本地存了备份，就自动还原
+                if (!tempPass && data.savedP) {
+                    tempPass = atob(data.savedP); // 解码还原
+                    sessionStorage.setItem('admin_temp_pass', tempPass);
+                    console.log("检测到有效的本地授权，已自动恢复暗号状态");
+                }
+                return true; 
+            } else {
+                // 超时则清理
+                localStorage.removeItem('admin_auth_data');
+            }
+        }
+        return !!tempPass; // 返回内存暗号是否存在
+    } catch (e) { return false; }
+};
+
+// 更新当前的管理员状态
+Object.defineProperty(window, 'isAdmin', {
+    get: function() {
+        return checkAuth(); // 每次代码里出现 isAdmin，都会自动跑一遍这个函数
+    },
+    configurable: true
+}); 
+
+// 使用 window.onload 确保 HTML 元素已经全部加载完成
+window.addEventListener('load', () => {
+    const trigger = document.getElementById('adminTrigger');
+    let uc = 0; // 连点计数器
+
+    if (trigger) {
+        trigger.onclick = () => {
+            if (++uc >= 5) {
+                // 这里调用我们之前定义的 isAdmin (它会触发 checkAuth)
+                if (window.isAdmin) {
+                    // 如果已经是管理员，执行注销
+                    sessionStorage.removeItem('admin_temp_pass');
+                    localStorage.removeItem('admin_auth_data');
+                    alert("管理员模式已注销 🔒");
+                    location.reload();
+                } else {
+                    // 如果是访客，执行登录
+                    const pass = prompt("请输入管理员暗号：");
+                    if (pass) {
+                        // 1. 存入内存供本次使用
+                        sessionStorage.setItem('admin_temp_pass', pass);
+                        
+                        // 2. 存入本地供 24 小时内自动找回
+                        localStorage.setItem('admin_auth_data', JSON.stringify({
+                            is_admin: true,
+                            loginTime: Date.now(),
+                            savedP: btoa(pass) // 🔑 这里存入加密后的钥匙
+                        }));
+                        
+                        alert("解锁成功 🔐");
+                        location.reload();
+                    }
+                }
+                uc = 0; // 重置计数
+            }
+        };
+    } else {
+        console.error("找不到 ID 为 adminTrigger 的隐藏区域，请检查 HTML 中是否有这个 ID");
+    }
+});
+
+        // --- 背景和样式 ---
+        function updateBlur(val) {
+            const bg = document.getElementById('bg-layer');
+            if(bg) bg.style.filter = `blur(${val}px)`;
+            const blVal = document.getElementById('blVal');
+            if(blVal) blVal.innerText = val;
+            saveMonthStyle('blur', val);
+        }
+
+        function updateBgOpacity(val) {
+            const bg = document.getElementById('bg-layer');
+            if(bg) bg.style.opacity = val;
+            const opVal = document.getElementById('opVal');
+            if(opVal) opVal.innerText = val;
+            saveMonthStyle('opacity', val);
+        }
+
+        async function saveMonthStyle(key, val) {
+    const y = currentDate.getFullYear(), m = currentDate.getMonth();
+    const monthKey = `${y}-${m}`;
+    const configId = `style_${monthKey}`;
+
+    // 1. 实时应用本地 CSS 变量（用户立刻能看到效果）
+    if(key === 'blur') document.documentElement.style.setProperty('--blur', val + 'px');
+    if(key === 'opacity') document.documentElement.style.setProperty('--bg-opacity', val);
+
+    // 2. 更新本地缓存
+    let styles = JSON.parse(localStorage.getItem('monthStyles') || '{}');
+    if (!styles[monthKey]) styles[monthKey] = {};
+    styles[monthKey][key] = val;
+    localStorage.setItem('monthStyles', JSON.stringify(styles));
+
+    // 3. 【核心修复】：如果是管理员，通过 RPC 存入云端
+    const pass = sessionStorage.getItem('admin_temp_pass'); // 你的暗号
+    
+    // 这里判断是否有暗号比判断 isAdmin 更靠谱，因为数据库只认暗号
+    if (pass) {
+        try {
+            const { error } = await _db.rpc('secure_update_config_item', {
+                input_password: pass,
+                config_id: configId, // 对应样式 ID，如 style_2026-4
+                new_value: JSON.stringify(styles[monthKey]) // 把样式对象转成字符串存进去
+            });
+            
+            if (error) throw error;
+            console.log("云端配置同步成功 ✨");
+        } catch (e) { 
+            console.error("云端保存失败:", e.message); 
+        }
+    }
+}
+
+        async function syncData() {
+            const y = currentDate.getFullYear();
+            const m = currentDate.getMonth();
+            try {
+                let query = _db.from('events').select('*').eq('year', y);
+                if (viewMode === 'month') { query = query.eq('month', m); }
+                const { data, error } = await query;
+                if (!error && data) {
+                    events = data;
+                    if (viewMode === 'year') { renderYear(); } else { renderCalendar(); }
+                } else { console.error("数据库读取错误:", error); }
+            } catch (err) { console.error("同步失败:", err); }
+            await updateDisplayBg();
+        }
+
+        function getLunar(y, m, d) {
+            const dateObj = new Date(y, m, d);
+            const lunar = new Intl.DateTimeFormat('zh-u-ca-chinese', {day:'numeric'}).format(dateObj);
+            if (lunar === '1日') return new Intl.DateTimeFormat('zh-u-ca-chinese', {month:'long'}).format(dateObj);
+            const num = parseInt(lunar), units = ["", "一", "二", "三", "四", "五", "六", "七", "八", "九", "十"];
+            if (num <= 10) return "初" + units[num];
+            if (num < 20) return "十" + units[num % 10];
+            if (num === 20) return "二十";
+            if (num < 30) return "廿" + units[num % 10];
+            return "三十";
+        }
+
+        async function renderCalendar() {
+            const container = document.getElementById('calendar-container'); // 确保 ID 对应你的日历容器
+    if (container) {
+        container.innerHTML = ''; // 🚩 这一行非常关键，先把旧的擦掉再画新的
+    }
+            document.getElementById('dateGrid').innerHTML = '';
+            document.getElementById('event-layer').innerHTML = '';
+
+            const grid = document.getElementById('dateGrid'), layer = document.getElementById('event-layer');
+            if (!grid || !layer) return;
+            grid.innerHTML = ''; layer.innerHTML = '';
+            
+            const y = currentDate.getFullYear(), m = currentDate.getMonth();
+            let currentStyle = { blur: 4, opacity: 0.5 };
+            const configId = `style_${y}-${m}`;
+            
+            try {
+                const { data } = await _db.from('configs').select('value').eq('id', configId).maybeSingle();
+                if (data && data.value) {
+                    currentStyle = JSON.parse(data.value);
+                    let localStyles = JSON.parse(localStorage.getItem('monthStyles') || '{}');
+                    localStyles[`${y}-${m}`] = currentStyle;
+                    localStorage.setItem('monthStyles', JSON.stringify(localStyles));
+                } else {
+                    const styles = JSON.parse(localStorage.getItem('monthStyles') || '{}');
+                    currentStyle = styles[`${y}-${m}`] || { blur: 4, opacity: 0.5 };
+                }
+            } catch (e) {
+                const styles = JSON.parse(localStorage.getItem('monthStyles') || '{}');
+                currentStyle = styles[`${y}-${m}`] || { blur: 4, opacity: 0.5 };
+            }
+
+            const bSlider = document.getElementById('blurRange'), oSlider = document.getElementById('bgOpacityRange');
+            const blText = document.getElementById('blVal'), opText = document.getElementById('opVal');
+            const finalBlur = currentStyle.blur !== undefined ? currentStyle.blur : 4;
+            const finalOpacity = currentStyle.opacity !== undefined ? currentStyle.opacity : 0.5;
+
+            if(bSlider) bSlider.value = finalBlur;
+            if(blText) blText.innerText = finalBlur;
+            if(oSlider) oSlider.value = finalOpacity;
+            if(opText) opText.innerText = finalOpacity;
+            
+            const bg = document.getElementById('bg-layer');
+            if(bg) { bg.style.filter = `blur(${finalBlur}px)`; bg.style.opacity = finalOpacity; }
+
+            const displayEl = document.getElementById('monthDisplay');
+            if(displayEl) displayEl.innerText = `${y}年 ${m+1}月`;
+
+            const first = new Date(y, m, 1).getDay();
+            const dInM = new Date(y, m + 1, 0).getDate();
+
+            for (let i = 0; i < first; i++) grid.innerHTML += '<div class="empty-cell"></div>';
+            let dateMap = {};
+            for (let d = 1; d <= dInM; d++) {
+                grid.innerHTML += `<div class="cell" onclick="handleCellClick(${d})" id="cell-${d}"><div class="date-row"><span class="s">${d}</span><span class="l">${getLunar(y,m,d)}</span></div></div>`;
+                dateMap[d] = { row: Math.floor((first + d - 1) / 7) + 1, col: ((first + d - 1) % 7) + 1 };
+            }
+            const remaining = (7 - ((first + dInM) % 7)) % 7;
+            for (let i = 0; i < remaining; i++) grid.innerHTML += '<div class="empty-cell"></div>';
+            
+            const monthEvents = events.filter(ev => ev.year === y && ev.month === m);
+            const sortedEvents = [...monthEvents].sort((a, b) => a.start - b.start || (a.end - b.end));
+            const eventSlots = {}; 
+            // --- 核心修复：强制数字转换，防止 1-9日 影响 10-31日 ---
+sortedEvents.forEach(ev => {
+    let slot = 0;
+    while (true) {
+        const isOccupied = monthEvents.some(other => {
+            // 将所有日期数据强转为数字再对比
+            const oStart = Number(other.start), oEnd = Number(other.end);
+            const eStart = Number(ev.start), eEnd = Number(ev.end);
+            
+            return eventSlots[other.id] === slot && !(oEnd < eStart || oStart > eEnd);
+        });
+        if (!isOccupied) { eventSlots[ev.id] = slot; break; }
+        slot++;
+    }
+});
+            const maxSlotsPerDay = {};
+            for (let d = 1; d <= dInM; d++) {
+    // 这里的 d 是数字，但 ev.start 和 ev.end 可能是字符串，必须统一
+    const daySlots = monthEvents.filter(ev => d >= Number(ev.start) && d <= Number(ev.end)).map(ev => eventSlots[ev.id]);
+    maxSlotsPerDay[d] = daySlots.length > 0 ? Math.max(...daySlots) + 1 : 0;
+}
+
+            monthEvents.forEach(ev => {
+                if(!dateMap[ev.start] || !dateMap[ev.end]) return;
+                const slot = eventSlots[ev.id];
+                let maxLen = -1, bestRow = -1;
+                for(let r = dateMap[ev.start].row; r <= dateMap[ev.end].row; r++){
+                    const sC = (r === dateMap[ev.start].row) ? dateMap[ev.start].col : 1;
+                    const eC = (r === dateMap[ev.end].row) ? dateMap[ev.end].col : 7;
+                    if ((eC - sC + 1) > maxLen) { maxLen = eC - sC + 1; bestRow = r; }
+                }
+                
+                for(let r = dateMap[ev.start].row; r <= dateMap[ev.end].row; r++){
+                    const sC = (r === dateMap[ev.start].row) ? dateMap[ev.start].col : 1;
+                    const eC = (r === dateMap[ev.end].row) ? dateMap[ev.end].col : 7;
+                    const bar = document.createElement('div');
+                    bar.className = 'event-bar';
+                    bar.style.gridColumn = `${sC}/${eC+1}`;
+                    bar.style.gridRow = r;
+                    let colorVal = ev.barColor || ev.color || '#B2F2BB';
+                    let realColor = (typeof colorVal === 'string' && colorVal.includes('|')) ? colorVal.split('|')[0] : colorVal;
+                    bar.style.backgroundColor = realColor;
+                    bar.style.display = 'flex';
+                    bar.style.overflow = 'hidden';
+
+                    let maxConflict = 0;
+                    for (let d = ev.start; d <= ev.end; d++) maxConflict = Math.max(maxConflict, maxSlotsPerDay[d] || 0);
+                    const bH = (65 / (maxConflict || 1)) - 1;
+                    bar.style.height = `${bH}px`;
+                    bar.style.marginTop = `${22 + slot * (bH + 1)}px`;
+
+                    if(r === bestRow) {
+                        bar.innerHTML = ev.text || ev.content || '';
+                    }
+                    
+                    // ===============================================
+                    // 【终极修复区】：不再去扫描 DOM，直接在这里绑定数据！
+                    // ===============================================
+                    bar.onclick = (e) => { 
+                        e.stopPropagation();
+                        // 1. 如果是管理员，正常调起编辑框
+                        if (typeof isAdmin !== 'undefined' && isAdmin === true) {
+                            openEditModal(ev.id); 
+                        } 
+                        // 2. 如果是访客，直接传 ev 给独立弹窗函数
+                        else {
+                            renderGuestDetail(ev);
+                        }
+                    };
+
+                    layer.appendChild(bar);
+                }
+            });
+            updateDisplayBg();
+        }
+
+        // --- 第一步：把卡片转换函数放在 saveEvent 的上方 ---
+function createLinkCard(text) {
+    const urlPattern = /(https?:\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%~_|])/ig;
+    
+    return text.replace(urlPattern, (url) => {
+        // 返回一个精致的小图标按钮
+        return `
+            <a href="${url}" target="_blank" title="打开链接" style="
+                display: inline-flex; 
+                align-items: center; 
+                justify-content: center; 
+                width: 24px; 
+                height: 24px; 
+                margin: 0 4px; 
+                background: #4a90e2; 
+                border-radius: 6px; 
+                vertical-align: middle; 
+                text-decoration: none;
+                transition: transform 0.2s;
+                pointer-events: auto;
+            " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                <svg viewBox="0 0 24 24" width="14" height="14" stroke="white" stroke-width="2.5" fill="none" style="display:block;">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path>
+                </svg>
+            </a>`;
+    });
+}
+
+// --- 这里是你原本的 saveEvent 函数 ---
+async function saveEvent() {
+    // 1. 获取 DOM 元素
+    const tEl = document.getElementById('editor-title');
+    const fEl = document.getElementById('editor-field'); 
+    const sVal = parseInt(document.getElementById('startDaySelect').value);
+    const eVal = parseInt(document.getElementById('endDaySelect').value);
+    
+    // 获取你编辑框里的透明度（假设 ID 是 opacityInput）
+    const opInput = document.getElementById('opacityInput'); 
+    const opVal = opInput ? opInput.value : null;
+
+    // 2. 拼接样式（保持你原本的样式逻辑）
+    const tTa = tEl.style.textAlign || 'left';
+    const tAi = tEl.style.alignItems || 'flex-start';
+    const tJc = tEl.style.justifyContent || 'flex-start';
+    const tempTitle = document.createElement('div');
+    tempTitle.innerHTML = tEl.innerHTML;
+    
+    const styledTitle = `<div style="display:flex; flex-direction:column; width:100%; height:100%; justify-content:${tJc}; align-items:stretch;">${tempTitle.innerHTML}</div>`;
+    
+    const fTa = fEl.style.textAlign || 'left';
+    const fAi = fEl.style.alignItems || 'flex-start';
+    const fJc = fEl.style.justifyContent || 'flex-start';
+    const tempField = document.createElement('div');
+    tempField.innerHTML = createLinkCard(fEl.innerHTML); 
+    
+    const styledDetail = `<div style="display:flex; flex-direction:column; width:100%; height:100%; justify-content:${fJc}; align-items:stretch;">${tempField.innerHTML}</div>`;
+
+    // 3. 获取暗号
+// 【关键修改】：这里不再直接 get，而是先访问一下 window.isAdmin 
+// 因为访问 window.isAdmin 会触发我们之前写的 checkAuth()，从而自动恢复 sessionStorage
+const isAuthorized = window.isAdmin; 
+const pass = sessionStorage.getItem('admin_temp_pass');
+
+if (!isAuthorized || !pass) {
+    alert("⚠️ 请先点击隐藏区域并输入管理员暗号");
+    return; 
+}
+
+    const finalId = editingId ? editingId : Math.floor(Date.now() / 1000);
+
+    // 4. 执行保存动作
+    try {
+        // --- 动作 A：保存日程备注 ---
+        const { error: eventError } = await _db.rpc('secure_upsert_event', {
+            input_password: pass,
+            event_id: finalId,
+            event_text: styledTitle,
+            event_content: styledDetail,
+            event_start: Math.min(sVal, eVal),
+            event_end: Math.max(sVal, eVal),
+            event_year: currentDate.getFullYear(),
+            event_month: currentDate.getMonth(),
+            event_bar_color: currentBarColor
+        });
+        if (eventError) throw eventError;
+
+        // --- 动作 B：保存透明度设置（如果有改动的话） ---
+        if (opVal !== null) {
+            const { error: configError } = await _db.rpc('secure_update_config_item', {
+                input_password: pass,
+                config_id: 'bg_opacity',
+                new_value: opVal.toString()
+            });
+            if (configError) throw configError;
+            // 实时应用到页面样式
+            document.body.style.setProperty('--bg-opacity', opVal);
+        }
+
+        // 5. 成功反馈
+        console.log("✅ 全部内容已同步保存");
+        closeModal();
+        setTimeout(() => { syncData(); }, 200);
+
+    } catch (err) {
+        console.error("保存失败:", err);
+        alert("🚫 保存失败：" + err.message);
+        if (err.message.includes('暗号错误')) {
+            sessionStorage.removeItem('admin_temp_pass');
+        }
+    }
+}
+
+        function openEditModal(id, s, e) {
+            if (!isAdmin) return;
+            editingId = id;
+
+            const tEl = document.getElementById('editor-title');
+            const fEl = document.getElementById('editor-field'); 
+            const sS = document.getElementById('startDaySelect');
+            const eS = document.getElementById('endDaySelect');
+            const delBtn = document.getElementById('delBtn');
+
+            const lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0).getDate();
+            sS.innerHTML = eS.innerHTML = ''; 
+            for(let i = 1; i <= lastDay; i++) { 
+                sS.innerHTML += `<option value="${i}">${i}</option>`;
+                eS.innerHTML += `<option value="${i}">${i}</option>`; 
+            }
+            
+            if(id) {
+                const ev = events.find(i => i.id == id);
+                sS.value = ev.start; 
+                eS.value = ev.end;
+
+                const tempT = document.createElement('div');
+tempT.innerHTML = ev.text || "";
+const tWrapper = tempT.querySelector('div[style*="display:flex"]');
+
+if (tWrapper) {
+    // 1. 依然只取内部的 HTML
+    tEl.innerHTML = tWrapper.innerHTML;
+    
+    // 2. 【核心修改】：不再从 tWrapper 提取 textAlign
+    // 我们手动把编辑框容器设为 stretch，确保内部的 div 宽度能铺满
+    tEl.style.display = 'flex';
+    tEl.style.flexDirection = 'column';
+    tEl.style.alignItems = 'stretch'; 
+    tEl.style.textAlign = 'inherit'; 
+
+    // 3. 垂直对齐（上下位置）可以保留，因为这个不影响左右对齐
+    tEl.style.justifyContent = tWrapper.style.justifyContent || 'flex-start';
+} else {
+    tEl.innerHTML = ev.text || "";
+    tEl.style.textAlign = 'inherit';
+    tEl.style.alignItems = 'stretch';
+}
+                // --- 详情回显逻辑修改 ---
+                const tempF = document.createElement('div');
+                tempF.innerHTML = ev.content || ""; 
+                const fWrapper = tempF.querySelector('div[style*="display:flex"]');
+                
+                if (fWrapper) {
+                    fEl.innerHTML = fWrapper.innerHTML;
+                    // 【关键修复】：
+                    fEl.style.display = 'flex';
+                    fEl.style.flexDirection = 'column';
+                    fEl.style.alignItems = 'stretch';  // 必须是 stretch，行样式才能生效
+                    fEl.style.textAlign = 'inherit';   // 别写死 left
+                    fEl.style.justifyContent = fWrapper.style.justifyContent || 'flex-start';
+                } else {
+                    fEl.innerHTML = ev.content || "";
+                    fEl.style.textAlign = 'inherit';
+                    fEl.style.alignItems = 'stretch';
+                }
+
+                const cVal = ev.barColor || ev.color || '#B2F2BB';
+                currentBarColor = (typeof cVal === 'string') ? cVal.split('|')[0] : cVal;
+                delBtn.style.display = 'block';
+            } else {
+                tEl.innerHTML = '';
+                fEl.innerHTML = '';
+                sS.value = Math.min(s, lastDay); 
+                eS.value = Math.min(e, lastDay);
+                currentBarColor = '#B2F2BB';
+                tEl.style.textAlign = fEl.style.textAlign = 'left';
+                tEl.style.justifyContent = fEl.style.justifyContent = 'flex-start';
+                tEl.style.alignItems = fEl.style.alignItems = 'flex-start';
+                delBtn.style.display = 'none';
+            }
+
+            document.getElementById('modal-overlay').style.display = 'block';
+            document.getElementById('editor-modal').style.display = 'block';
+        }
+
+        function setStyle(e, p, v) { e.preventDefault(); const sel = window.getSelection(); if (!sel.rangeCount || sel.toString().length === 0) return; const range = sel.getRangeAt(0); const span = document.createElement('span'); span.style[p] = v; span.style.lineHeight = "1.2"; span.appendChild(range.extractContents()); range.insertNode(span); sel.removeAllRanges(); }
+        function exec(e, c) {
+    e.preventDefault();
+    const activeEl = document.activeElement;
+    if (activeEl.id !== 'editor-title' && activeEl.id !== 'editor-field') return;
+
+    // --- 核心改动点 ---
+    if (c === 'justifyLeft' || c === 'justifyCenter' || c === 'justifyRight') {
+        // 1. 废除原本的 activeEl.style.textAlign 修改
+        // 2. 直接使用原生命令，它会自动给当前行套上 <div style="text-align:...">
+        document.execCommand(c, false, null); 
+        
+        // 3. 重置编辑框容器的对齐（让容器变回“中立”，不强制干涉内部）
+        activeEl.style.alignItems = 'stretch'; 
+        activeEl.style.textAlign = 'inherit';
+        return;
+    }
+
+    // 其他命令（加粗、斜体等）保持不变
+    document.execCommand(c, false, null);
+}
+
+
+        function setAlign(e, v) { e.preventDefault(); const activeEl = document.activeElement; if (activeEl.id !== 'editor-title' && activeEl.id !== 'editor-field') return; activeEl.style.display = 'flex'; activeEl.style.flexDirection = 'column'; activeEl.style.justifyContent = v; }
+        function setBarColor(c) { currentBarColor = c; }
+        async function changeBg() {
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) return alert("请先解锁");
+
+    const i = document.createElement("input");
+    i.type = "file";
+    i.accept = "image/*";
+    i.onchange = async e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // --- 逻辑判断 ---
+        const isGif = file.type === 'image/gif';
+        const isLargeFile = file.size > 200 * 1024; // 200KB 阈值
+        const bgId = `bg_${currentDate.getFullYear()}_${currentDate.getMonth()}`;
+        const extension = isGif ? 'gif' : (file.type === 'image/png' ? 'png' : 'jpg');
+        const fileName = `${bgId}_${Date.now()}.${extension}`;
+
+        // --- 分流处理 ---
+        if (isGif || !isLargeFile) {
+            // 情况A：GIF 或 小于200KB 的图，直接原样上传
+            console.log("原样上传模式");
+            await uploadProcess(file, fileName, file.type, bgId);
+        } else {
+    // 情况B：大于200KB 的静态图，走 Canvas 压缩
+    console.log("启动压缩模式...");
+    const r = new FileReader();
+    r.readAsDataURL(file);
+    r.onload = ev => {
+        const img = new Image();
+        img.src = ev.target.result;
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const maxW = 1920; 
+            const scale = Math.min(1, maxW / img.width);
+            canvas.width = img.width * scale;
+            canvas.height = img.height * scale;
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            
+            // --- 这里就是你关心的【格式与质量】判断 ---
+            // 如果是 PNG 则用 image/png 导出，否则统一用 image/jpeg
+            const outputMime = file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+            
+            canvas.toBlob(blob => {
+                uploadProcess(blob, fileName, outputMime, bgId);
+            }, outputMime, 0.8); // 0.8 对 JPEG 生效，PNG 会被浏览器处理为无损
+        };
+    };
+}
+}
+    i.click();
+}
+
+// 独立的上传处理逻辑，确保代码不冗余
+async function uploadProcess(fileData, fileName, mimeType, bgId) {
+    try {
+        // 1. 上传到 Storage
+        const { error: uploadError } = await _db.storage
+            .from('calendar-assets')
+            .upload(fileName, fileData, { contentType: mimeType });
+
+        if (uploadError) throw uploadError;
+
+        // 2. 获取链接
+        const { data: { publicUrl } } = _db.storage
+            .from('calendar-assets')
+            .getPublicUrl(fileName);
+
+        // 3. 更新数据库配置
+        const { error: dbError } = await _db.rpc('secure_update_config_item', {
+            input_password: sessionStorage.getItem('admin_temp_pass'),
+            config_id: bgId,
+            new_value: publicUrl
+        });
+
+        if (dbError) throw dbError;
+
+        // 4. 更新本地缓存并显示
+        localStorage.setItem(getCacheKey(bgId), publicUrl);;
+        updateDisplayBg(); // 确保你页面上有这个刷新背景的函数
+        alert("背景同步成功！✨");
+    } catch (err) {
+        console.error(err);
+        alert("上传失败：" + err.message);
+    }
+}
+
+async function updateDisplayBg() {
+    // 1. 拦截逻辑保持不变
+    const yv = document.getElementById('yearView');
+    if (yv && yv.style.display !== 'none') return; 
+
+    const bgId = `bg_${currentDate.getFullYear()}_${currentDate.getMonth()}`;
+    
+    try {
+        // --- 【关键修改 1】：强制去数据库拉取最新的数据，而不是只看缓存 ---
+        // 我们不再先读 localStorage，而是直接去问数据库：“现在的图片地址是什么？”
+        const { data } = await _db.from('configs').select('value').eq('id', bgId).maybeSingle();
+        
+        let s = data?.value;
+        const bgLayer = document.getElementById('bg-layer');
+        const bodyTag = document.getElementById('body-tag');
+
+        if (s) {
+            // --- 【关键修改 2】：破解浏览器强缓存 (Cache Busting) ---
+            // 在图片地址后面加一个时间戳，强迫浏览器认为这是一张“新图”
+            // 即使 URL 一样，加了 ?t=... 后浏览器也会重新下载
+            const timestamp = new Date().getTime();
+            const finalUrl = s.includes('?') ? `${s}&t=${timestamp}` : `${s}?t=${timestamp}`;
+
+            bgLayer.style.backgroundImage = `url('${finalUrl}')`;
+            bodyTag.classList.add('has-bg');
+            
+            // 更新本地缓存
+            localStorage.setItem(getCacheKey(bgId), s);
+        } else {
+            // ... 清空逻辑保持注释
+        }
+    } catch (e) {
+        console.log("背景加载失败", e);
+    }
+}
+
+        const bgLayer = document.getElementById('bg-layer');
+        const bodyTag = document.getElementById('body-tag');
+
+        if (s) {
+            bgLayer.style.backgroundImage = `url('${s}')`;
+            bodyTag.classList.add('has-bg');
+        } else {
+            // 已按需求注释，防止抹除年背景
+            //bgLayer.style.backgroundImage = 'none';
+            //bodyTag.classList.remove('has-bg');
+        }
+    } catch (e) {
+        console.log("背景加载略过", e);
+    }
+}
+        function exportData(){ const b=new Blob([JSON.stringify(events)],{type:'application/json'}); const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='calendar_backup.json'; a.click(); }
+        async function importData() {
+    // 1. 权限检查
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) return alert("请先解锁权限（连击5次入口）");
+
+    const i = document.createElement('input');
+    i.type = 'file';
+    i.accept = '.json'; // 限制只能选 json 文件
+    i.onchange = e => {
+        const r = new FileReader();
+        r.onload = async ev => {
+            try {
+                const newData = JSON.parse(ev.target.result);
+                let successCount = 0;
+
+                for (let d of newData) {
+                    // 构建符合 RPC 函数要求的参数
+                    const eventParams = {
+                        input_password: pass,
+                        event_id: d.id, // 使用备份里的原 ID
+                        e_text: d.text,
+                        e_start: parseInt(d.start),
+                        e_end: parseInt(d.end),
+                        e_year: parseInt(d.year),
+                        e_month: parseInt(d.month),
+                        e_color: d.barColor || d.color || '#3b82f6',
+                        e_content: d.content || ""
+                    };
+
+                    // 【核心修复】：改用安全 RPC 写入
+                    const { error } = await _db.rpc('secure_upsert_event', eventParams);
+                    
+                    if (error) {
+                        console.error("同步失败一条:", error.message);
+                    } else {
+                        successCount++;
+                    }
+                }
+
+                alert(`同步完成！成功导入 ${successCount} 条数据。`);
+                syncData(); // 刷新日历显示
+            } catch (err) {
+                alert("文件解析失败，请确保是有效的备份文件。");
+            }
+        };
+        r.readAsText(e.target.files[0]);
+    };
+    i.click();
+}
+function toggleView() { viewMode = (viewMode === 'month' ? 'year' : 'month'); document.getElementById('monthView').style.display = (viewMode === 'month' ? 'block' : 'none'); document.getElementById('yearView').style.display = (viewMode === 'year' ? 'grid' : 'none'); syncData(); }
+        function renderYear() {
+    const yv = document.getElementById('yearView');
+    const mv = document.getElementById('monthView'); // 拿到月视图容器
+    
+    // 【关键】：显示年，隐藏月
+    yv.style.display = 'grid'; // 或者 'block'，取决于你的 CSS
+    if (mv) mv.style.display = 'none';
+
+    yv.innerHTML = '';
+    const y = currentDate.getFullYear();
+    document.getElementById('monthDisplay').innerText = `${y}年 全览`;
+
+// 【新增判断逻辑】
+// 如果你的代码里有 updateDisplayBg()，我们要确保它不乱跑
+// 我们直接调用新写的强力函数
+updateYearDisplayBg(); 
+initYearLongPress();
+
+    for (let m = 0; m < 12; m++) {
+        const card = document.createElement('div');
+        card.className = 'year-month-card';
+        card.onclick = () => {
+            currentDate.setMonth(m);
+            viewMode = 'month';
+            document.getElementById('monthView').style.display = 'block';
+            document.getElementById('yearView').style.display = 'none';
+            syncData();
+        };
+
+        let h = `<div style="font-size:11px;font-weight:bold">${m + 1}月</div><div class="ym-grid">`;
+        const first = new Date(y, m, 1).getDay();
+        const dInM = new Date(y, m + 1, 0).getDate();
+
+        for (let i = 0; i < first; i++) h += '<div class="ym-day"></div>';
+
+        for (let d = 1; d <= dInM; d++) {
+            let markHtml = '';
+            let isSpecial = false; 
+            const ev = events.find(e => e.year === y && e.month === m && d >= e.start && d <= e.end);
+
+            if (ev) {
+                const color = ev.barColor || '#3b82f6';
+                const fullText = (ev.text || '') + (ev.content || '');
+                const currM = m + 1;
+                const currD = d;
+                const sD = parseInt(ev.start) || 0;
+                const eD = parseInt(ev.end) || 0;
+                let activeSymbol = '';
+
+                // --- 1. 处理 @ 精准点名 ---
+                if (fullText.includes('@')) {
+                    const matches = Array.from(fullText.matchAll(/([^@\s]*?)@\s*(\d+月\d+日|\d+号|第?\d+)/g));
+                    for (let match of matches) {
+                        const preText = match[1]; 
+                        const dateStr = match[2]; 
+                        let hit = false;
+                        if (dateStr.includes('月')) {
+                            const md = dateStr.match(/(\d+)月(\d+)日/);
+                            if (md && currM === parseInt(md[1]) && currD === parseInt(md[2])) hit = true;
+                        } else if (dateStr.includes('号')) {
+                            const dd = dateStr.match(/(\d+)号/);
+                            if (dd && currD === parseInt(dd[1])) hit = true;
+                        } else {
+                            const off = dateStr.match(/第?(\d+)/);
+                            if (off && currD === (sD + parseInt(off[1]) - 1)) hit = true;
+                        }
+
+                        if (hit) {
+                            isSpecial = true;
+                            if (preText.includes('生日')) activeSymbol = '🎂';
+                            else if (preText.includes('夺冠') || preText.includes('金牌')) activeSymbol = '🏆'; 
+                            else if (preText.includes('表彰') || preText.includes('荣誉')) activeSymbol = '🎖'; 
+                            else if (preText.includes('杂志') || preText.includes('拍摄')) activeSymbol = '📸'; 
+                            else if (preText.includes('飞') || preText.includes('返')) activeSymbol = '🛫';
+                            else if (preText.includes('截止')) activeSymbol = '🚩';
+                            else if (preText.includes('★')) activeSymbol = '★';
+                            else if (preText.includes('休') || preText.includes('假')) activeSymbol = '🏖️';
+                            break; 
+                        }
+                    }
+                }
+
+                // --- 2. 默认兜底逻辑 ---
+                if (!isSpecial && !fullText.includes('@')) {
+                    if (fullText.includes('🚩') || fullText.includes('★')) {
+                        if (currD === eD) { isSpecial = true; activeSymbol = fullText.includes('🚩') ? '🚩' : '★'; }
+                    } else if (fullText.includes('休') || fullText.includes('假')) {
+                        isSpecial = true; activeSymbol = '🏖️';
+                    } else if (currD === sD) {
+                        isSpecial = true;
+                        if (fullText.includes('生日')) activeSymbol = '🎂';
+                        else if (fullText.includes('夺冠') || fullText.includes('金牌')) activeSymbol = '🏆';
+                        else if (fullText.includes('表彰') || fullText.includes('荣誉')) activeSymbol = '🎖';
+                        else if (fullText.includes('杂志') || fullText.includes('拍摄')) activeSymbol = '📸';
+                        else if (fullText.includes('飞') || fullText.includes('返')) activeSymbol = '🛫';
+                        
+                    }
+                }
+
+                // --- 3. 渲染 ---
+                if (isSpecial && activeSymbol) {
+                    let displayColor = (color === 'transparent' || color.includes('rgba') || color === '#f1f5f9') ? '#475569' : color;
+                    markHtml = `<div class="dot-mark" style="color:${displayColor}; text-shadow: 0 0 2px #fff; font-weight: bold;">${activeSymbol}</div>`;
+                } else {
+                    let dotBg = color === 'transparent' ? '#cbd5e0' : color;
+                    markHtml = `<div class="dot-mark" style="background:${dotBg};"></div>`;
+                }
+            } // 结束 if(ev)
+            h += `<div class="ym-day">${d}${markHtml}</div>`;
+        } // 结束 for 循环
+
+        card.innerHTML = h + '</div>';
+        yv.appendChild(card);
+    }
+}
+        function handleCellClick(d) { if(!isAdmin) return; if (selection.length === 0) { selection.push(d); document.getElementById(`cell-${d}`).classList.add('selected'); } else { openEditModal(null, Math.min(selection[0], d), Math.max(selection[0], d)); } }
+        function closeModal() { document.getElementById('modal-overlay').style.display='none'; document.getElementById('editor-modal').style.display='none'; selection=[]; document.querySelectorAll('.cell').forEach(c=>c.classList.remove('selected')); }
+        async function deleteEvent() {
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) return alert("请先验证身份");
+
+    if (confirm("确定要删除这条日程吗？")) {
+        try {
+            const { error } = await _db.rpc('secure_delete_event', {
+                input_password: pass, // 必须对应 SQL 里的 input_password
+                event_id: String(editingId) // 必须对应 SQL 里的 event_id
+            });
+
+            if (error) throw error;
+            
+            closeModal();
+            syncData();
+            console.log("删除成功 🗑️");
+        } catch (err) {
+            console.error("删除失败:", err);
+            alert("删除失败：" + err.message);
+        }
+    }
+}
+        function changeMonth(o) { 
+    if (typeof viewMode !== 'undefined' && viewMode === 'year') {
+        // 年视图下，按一下跳一年
+        currentDate.setFullYear(currentDate.getFullYear() + o);
+    } else {
+        // 月视图下，按一下跳一月
+        currentDate.setMonth(currentDate.getMonth() + o);
+    }
+    syncData(); 
+}
+
+        let tempTitleStyle = { color: '#2d3748', fontSize: '18px' };
+        let currentLogoBase64 = null; 
+        function imgCompress(file, maxW, callback) { const r = new FileReader(); r.onload = ev => { const img = new Image(); img.src = ev.target.result; img.onload = () => { const canvas = document.createElement('canvas'); const ctx = canvas.getContext('2d'); if(img.width <= maxW) { callback(ev.target.result); return; } const scale = maxW / img.width; canvas.width = maxW; canvas.height = img.height * scale; ctx.drawImage(img, 0, 0, canvas.width, canvas.height); callback(canvas.toDataURL('image/png')); }; }; r.readAsDataURL(file); }
+        function triggerLogoUpload() { if(!isAdmin) return alert("请先解锁"); const i = document.createElement("input"); i.type = "file"; i.accept = "image/*"; i.onchange = e => { const file = e.target.files[0]; if(!file) return; imgCompress(file, 400, (compressed) => { currentLogoBase64 = compressed; const p = document.getElementById('logoEditPreview'); if(p) { p.src = compressed; p.style.display = 'block'; } document.getElementById('logoUploadText').innerText = "点击更换 LOGO"; document.getElementById('delLogoBtn').style.display = 'block'; }); }; i.click(); }
+        function deleteLogo() { currentLogoBase64 = null; document.getElementById('logoEditPreview').style.display = 'none'; document.getElementById('logoUploadText').innerText = "点击上传 LOGO 图片"; document.getElementById('delLogoBtn').style.display = 'none'; }
+        function openNameModal() { if(!isAdmin) return alert("请点击底部©解锁权限"); const display = document.getElementById('calendarNameDisplay'); const input = document.getElementById('nameEditInput'); const logoDisplay = document.getElementById('calendarLogoDisplay'); input.value = (display.innerText === "双击设置日历名称") ? "" : display.innerText; input.style.color = display.style.color || '#2d3748'; input.style.fontSize = display.style.fontSize || '18px'; if(logoDisplay && logoDisplay.style.display === 'inline-block') { document.getElementById('logoEditPreview').src = logoDisplay.src; document.getElementById('logoEditPreview').style.display = 'block'; document.getElementById('logoUploadText').innerText = "点击更换 LOGO"; document.getElementById('delLogoBtn').style.display = 'block'; currentLogoBase64 = logoDisplay.src; } else { deleteLogo(); } document.getElementById('modal-overlay').style.display = 'block'; document.getElementById('name-modal').style.display = 'block'; }
+        function closeNameModal() { document.getElementById('modal-overlay').style.display = 'none'; document.getElementById('name-modal').style.display = 'none'; }
+        function setTitleStyle(prop, val) { const input = document.getElementById('nameEditInput'); if(input) input.style[prop] = val; tempTitleStyle[prop] = val; }
+        // --- 1. 保存函数 ---
+async function dbSaveCalendarName() {
+    const text = document.getElementById('nameEditInput').value || "双击设置日历名称";
+    const fullData = { 
+        text: text, 
+        color: tempTitleStyle.color, 
+        fontSize: tempTitleStyle.fontSize, 
+        logo: currentLogoBase64 
+    };
+
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) {
+        alert("⚠️ 请先验证管理员身份");
+        return;
+    }
+
+    try {
+        const { error } = await _db.rpc('secure_update_config_item', {
+            input_password: pass,
+            config_id: 'global_calendar_name',
+            new_value: JSON.stringify(fullData)
+        });
+
+        if (error) throw error;
+        localStorage.setItem('customCalendarNameData', JSON.stringify(fullData));
+        closeNameModal();
+        location.reload(); 
+    } catch (err) {
+        console.error("云端保存失败:", err.message);
+        alert("🚫 云端保存失败：" + err.message);
+    }
+}
+
+// --- 2. 加载函数 ---
+async function dbLoadCalendarName() { 
+    const display = document.getElementById('calendarNameDisplay'); 
+    const logoDisplay = document.getElementById('calendarLogoDisplay'); 
+
+    const applyData = (dataStr) => { 
+        if(!dataStr) return; 
+        try { 
+            const d = JSON.parse(dataStr); 
+            if(typeof d === 'object' && d !== null) { 
+                display.innerText = d.text || "双击设置日历名称"; 
+                display.style.color = d.color || '#2d3748'; 
+                display.style.fontSize = d.fontSize || '18px'; 
+                tempTitleStyle = { color: d.color, fontSize: d.fontSize }; 
+                if(d.logo && logoDisplay) { 
+                    logoDisplay.src = d.logo; 
+                    logoDisplay.style.display = 'inline-block'; 
+                } 
+            } else { 
+                display.innerText = dataStr; 
+            } 
+        } catch(e) { display.innerText = dataStr; } 
+    }; 
+
+    const local = localStorage.getItem('customCalendarNameData'); 
+    if (local) applyData(local); 
+
+    try { 
+        const { data, error } = await _db.from('configs').select('value').eq('id', 'global_calendar_name').maybeSingle(); 
+        if (!error && data && data.value) { 
+            applyData(data.value); 
+            localStorage.setItem('customCalendarNameData', data.value); 
+        } 
+    } catch (err) { console.log("标题加载完成"); } 
+}
+
+        async function initApp() {
+    // 1. 基础配置（不阻塞后续逻辑）
+    dbLoadCalendarName(); 
+    viewMode = 'year';
+    
+    // 2. 瞬间渲染年视图框架
+    renderYear(); 
+    updateDisplayBg();
+
+    // 3. 异步同步数据，不影响页面跳转计时
+    const startSync = async () => {
+        try {
+            await syncData(); 
+            renderYear(); // 数据到场后补一下红点
+        } catch (e) {
+            console.log("初始化同步略过", e);
+        }
+    };
+    startSync();
+
+    // 4. 定义长按监听函数 (必须在使用它之前定义)
+    const setupLongPress = (btnId) => {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        let timer = null;
+        let isLongPress = false;
+        const start = (e) => {
+            isLongPress = false;
+            timer = setTimeout(() => {
+                isLongPress = true;
+                if (typeof quickJump === 'function') quickJump(); 
+            }, 600);
+        };
+        const end = () => { if (timer) clearTimeout(timer); };
+        btn.onmousedown = btn.ontouchstart = start;
+        btn.onmouseup = btn.onmouseleave = btn.ontouchend = end;
+        btn.oncontextmenu = (e) => { if (isLongPress) e.preventDefault(); };
+    };
+
+    // 5. 执行长按监听绑定
+    setupLongPress('prevBtn');
+    setupLongPress('nextBtn');
+
+    // 6. 2.5秒后强制跳转
+    setTimeout(() => {
+        viewMode = 'month';
+        const yv = document.getElementById('yearView');
+        const mv = document.getElementById('monthView');
+        if (yv) yv.style.display = 'none';
+        if (mv) mv.style.display = 'block';
+        
+        currentDate = new Date();
+        renderCalendar(); 
+        updateDisplayBg();
+        console.log("已自动跳转至当前月份");
+    }, 2500); 
+}
+
+// 最后别忘了启动
+initApp();
+
+        // ==========================================
+        // 【绝对核心】独立的访客详情弹窗逻辑
+        // ==========================================
+        window.renderGuestDetail = function(ev) {
+            const modal = document.getElementById('noteDetailModal');
+            const contentBox = document.getElementById('noteDetailContent');
+            if (!modal || !contentBox || !ev) return;
+
+            // 1. 处理日期格式
+            const s = parseInt(ev.start), e = parseInt(ev.end);
+            const m = (ev.month !== undefined) ? (parseInt(ev.month) + 1) : "";
+            const y = ev.year || "";
+            const dateStr = (s === e) ? `${m}月${s}日` : `${m}月${s}日至${e}日`;
+
+            // 2. 提取真正的内容
+            const hasContent = ev.content && ev.content !== "null" && ev.content.trim().length > 0;
+            const finalContent = hasContent ? ev.content : '<span style="color:#bbb; font-style:italic;">( 暂无详细内容 )</span>';
+
+            // 3. 渲染数据
+            contentBox.innerHTML = `
+                <div style="font-size: 13px; color: #888; margin-bottom: 12px; text-align:center;">
+                    📅 ${y}年 ${dateStr}
+                </div>
+                <div style="padding-bottom: 15px; margin-bottom: 15px; border-bottom: 1px dashed rgba(0,0,0,0.1); width:100%; font-weight:bold;">
+                    ${ev.text || '无标题'}
+                </div>
+                <div class="note-detail-body" style="text-align: left; width: 100%; min-height: 80px; line-height: 1.6;">
+                    ${finalContent}
+                </div>
+            `;
+            
+            modal.style.display = 'block';
+        };
+
+        window.closeNoteModal = function() {
+            const m = document.getElementById('noteDetailModal');
+            if (m) m.style.display = 'none';
+        };
+function quickJump() {
+    if (viewMode === 'year') {
+        const y = prompt("🚀 快速跳转年份:", currentDate.getFullYear());
+        if (y && !isNaN(y)) {
+            currentDate.setFullYear(parseInt(y));
+            syncData();
+        }
+    } else {
+        const currentY = currentDate.getFullYear();
+        const currentM = currentDate.getMonth() + 1;
+        const res = prompt("📅 跳转日期 (格式 2026.5):", `${currentY}.${currentM}`);
+        if (res && res.includes('.')) {
+            const [y, m] = res.split('.');
+            if(!isNaN(y) && !isNaN(m)) {
+                currentDate.setFullYear(parseInt(y));
+                currentDate.setMonth(parseInt(m) - 1);
+                syncData();
+            }
+        }
+    }
+}
+  // 这个补丁会在页面加载完成后执行
+setTimeout(() => {
+    const titleEl = document.getElementById('calendar-title'); // 确认ID和你的HTML一致
+    if (!titleEl) return;
+
+    // 获取当前标题的文字
+    const currentTitle = titleEl.innerText.trim();
+
+    // 如果你是管理员，且目前的标题是初始状态（空的或者是“我的日历”）
+    if (isAdmin && (currentTitle === "" || currentTitle === "我的日历")) {
+        titleEl.innerText = "双击设置日历名称";
+    }
+}, 1000); // 延迟1秒，确保数据库的数据已经加载完了  
+
+
+// 【新增函数 1】年背景专用上传逻辑
+async function changeYearBg() {
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) return alert("请先解锁");
+
+    const i = document.createElement("input");
+    i.type = "file"; i.accept = "image/*";
+    i.onchange = async e => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // 这里的 ID 永远带 _year 后缀，不会和 1 月份冲突
+        const bgId = `bg_${currentDate.getFullYear()}_year`;
+        const extension = file.type === 'image/gif' ? 'gif' : 'jpg';
+        const fileName = `${bgId}_${Date.now()}.${extension}`;
+
+        const btn = document.getElementById('yearUploadBtn');
+        btn.innerText = "正在上传...";
+
+        // 直接复用你原本的上传和压缩逻辑
+        if (file.type === 'image/gif' || file.size <= 200 * 1024) {
+            await uploadProcess(file, fileName, file.type, bgId);
+        } else {
+            const r = new FileReader();
+            r.readAsDataURL(file);
+            r.onload = ev => {
+                const img = new Image();
+                img.src = ev.target.result;
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const scale = Math.min(1, 1920 / img.width);
+                    canvas.width = img.width * scale; canvas.height = img.height * scale;
+                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                    canvas.toBlob(blob => {
+                        uploadProcess(blob, fileName, 'image/jpeg', bgId);
+                    }, 'image/jpeg', 0.8);
+                };
+            };
+        }
+        btn.innerText = "✅ 上传成功";
+        // 上传完延迟刷新背景显示
+        setTimeout(() => { updateYearDisplayBg(); }, 1000);
+    };
+    i.click();
+}
+
+// 【新增函数 2】实时预览效果（不糊弹窗）
+// 【修改】增强预览函数，确保它操作的是年背景
+// 【完整版】预览函数：既防回跳，又确保滤镜生效
+function previewYearStyle() {
+    const blur = document.getElementById('yearBlurInp').value;
+    const bright = document.getElementById('yearBrightInp').value;
+    const alpha = document.getElementById('yearCardAlphaInp').value;
+    // 如果你还没加文字颜色滑块，可以先写死一个变量，或者获取它
+    const textB = document.getElementById('yearTextBrightInp')?.value || 51;
+
+    document.getElementById('valBlur').innerText = blur;
+    document.getElementById('valBright').innerText = bright;
+    document.getElementById('valCardAlpha').innerText = alpha;
+
+    // --- 核心修复：确保变量名和上面的 CSS 一一对应 ---
+    const root = document.documentElement;
+    root.style.setProperty('--bg-blur', blur + 'px');
+    root.style.setProperty('--bg-bright', bright);
+    // 注意这里：我们把透明度直接合成到背景颜色变量里
+    root.style.setProperty('--year-card-bg', `rgba(255, 255, 255, ${alpha})`);
+    root.style.setProperty('--year-text-color', `rgb(${textB}, ${textB}, ${textB})`);
+
+    // 处理背景层
+    const bgLayer = document.getElementById('bg-layer');
+    if (bgLayer) {
+        const bgId = `bg_${currentDate.getFullYear()}_year`;
+        const cachedImg = localStorage.getItem(getCacheKey(bgId));
+        if (cachedImg) bgLayer.style.backgroundImage = `url('${cachedImg}')`;
+    }
+}
+
+// 【新增函数 3】年背景刷新逻辑
+// 【修改】增强年背景显示函数
+async function updateYearDisplayBg() {
+    const year = currentDate.getFullYear();
+    const bgId = `bg_${year}_year`;
+    const configId = `bg_${year}_year_config`;
+    
+    try {
+        // 1. 加载图片
+        let s = localStorage.getItem(getCacheKey(bgId));
+        if (!s) {
+            const { data } = await _db.from('configs').select('value').eq('id', bgId).maybeSingle();
+            if (data && data.value) {
+                s = data.value;
+                localStorage.setItem(getCacheKey(bgId), s);
+            }
+        }
+
+        // 2. 加载模糊度和亮度配置
+        let cfg = { blur: 0, brightness: 1 };
+        const savedCfg = localStorage.getItem(getCacheKey(configId));
+        if (savedCfg) {
+            cfg = JSON.parse(savedCfg);
+        } else {
+            const { data: cData } = await _db.from('configs').select('value').eq('id', configId).maybeSingle();
+            if (cData && cData.value) {
+                cfg = JSON.parse(cData.value);
+                localStorage.setItem(getCacheKey(configId), cData.value);
+            }
+        }
+
+        const bgLayer = document.getElementById('bg-layer');
+        if (bgLayer && s) {
+            // 应用图片
+            bgLayer.style.backgroundImage = `url('${s}')`;
+// --- 【这里是修改/新增的逻辑】 ---
+            // 应用模糊和亮度到根节点和背景层
+            const blurVal = (cfg.blur || 0) + 'px';
+            const brightVal = cfg.brightness || 1;
+            const alphaVal = cfg.cardAlpha || 0.2;
+
+            document.documentElement.style.setProperty('--bg-blur', blurVal);
+            document.documentElement.style.setProperty('--bg-bright', brightVal);
+            // 应用方块透明度变量
+            document.documentElement.style.setProperty('--year-card-bg', `rgba(255, 255, 255, ${alphaVal})`);
+
+// 同样加上强力覆盖逻辑
+document.querySelectorAll('.year-month-card').forEach(card => {
+    card.style.backgroundColor = `rgba(255, 255, 255, ${alphaVal})`;
+});
+            
+            // 为了防止被覆盖，直接给 bg-layer 对象也设一遍
+            bgLayer.style.setProperty('--bg-blur', blurVal);
+            bgLayer.style.setProperty('--bg-bright', brightVal);
+            // -------------------------------
+            
+            const bodyTag = document.getElementById('body-tag');
+            if (bodyTag) bodyTag.classList.add('has-bg');
+        }
+    } catch (e) { console.log("加载年背景失败", e); }
+}
+// 【新增】长按年视图标题弹出设置面板
+let yearLongPressTimer;
+
+function bindYearHeaderLongPress() {
+    // 假设你的年视图标题容器 ID 是 year-title 或类似，
+    // 如果没有 ID，我们直接寻找显示年份的那个 h1 或 div
+    const yearHeader = document.querySelector('.year-header') || document.getElementById('year-title');
+    
+    if (!yearHeader) {
+        console.log("未找到年标题元素，请确认标题的 class 或 ID 是否匹配");
+        return;
+    }
+
+    // 触摸开始（手机端）
+    yearHeader.ontouchstart = () => {
+        yearLongPressTimer = setTimeout(openYearAdmin, 800); // 长按 0.8 秒
+    };
+
+    // 触摸结束
+    yearHeader.ontouchend = () => clearTimeout(yearLongPressTimer);
+
+    // 鼠标按下（电脑端调试用）
+    yearHeader.onmousedown = () => {
+        yearLongPressTimer = setTimeout(openYearAdmin, 800);
+    };
+
+    yearHeader.onmouseup = () => clearTimeout(yearLongPressTimer);
+}
+
+
+// 在页面加载或切换到年视图时执行绑定
+// 你可以在你的 renderYearView 函数末尾调用一下 bindYearHeaderLongPress();
+
+
+// 【新增】专门负责监听长按并弹出新面板
+// 【新增】利用已有的 monthDisplay 绑定长按
+// 【修改】增加事件拦截，防止长按后跳回月视图
+function initYearLongPress() {
+    const el = document.getElementById('monthDisplay');
+    if (!el) return;
+
+    let timer;
+    let isLongPress = false; // 增加一个状态锁
+
+    const trigger = (e) => {
+        if (el.innerText.includes('年 全览')) {
+            isLongPress = true; // 标记现在是长按，不是普通点击
+            openYearAdmin();
+            // 尝试阻止事件进一步传播（防止触发原本的点击切换）
+            if(e) { e.preventDefault(); e.stopPropagation(); }
+        }
+    };
+
+    // 绑定触摸
+    el.ontouchstart = (e) => { 
+        isLongPress = false; 
+        timer = setTimeout(() => trigger(e), 800); 
+    };
+    el.ontouchend = (e) => {
+        if (isLongPress) {
+            e.preventDefault(); // 如果是长按，阻止放开时的点击动作
+        }
+        clearTimeout(timer);
+    };
+
+    // 绑定鼠标
+    el.onmousedown = (e) => { 
+        isLongPress = false; 
+        timer = setTimeout(() => trigger(e), 800); 
+    };
+    el.onmouseup = (e) => {
+        if (isLongPress) {
+            // 这是关键：在捕获阶段拦截接下来的 click 事件
+            window.addEventListener('click', captureClick, true);
+        }
+        clearTimeout(timer);
+    };
+
+    function captureClick(e) {
+        e.stopPropagation(); // 阻止切换月视图
+        window.removeEventListener('click', captureClick, true); // 用完即拆
+    }
+}
+
+// 【新增】弹出那个不糊的面板
+function openYearAdmin() {
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) return alert("🔒 请先解锁管理员权限");
+    
+    const modal = document.getElementById('year-admin-modal');
+    if (modal) {
+        modal.style.display = 'block';
+        // 尝试从本地加载之前的模糊度和亮度，让滑块位置正确
+        const year = currentDate.getFullYear();
+        const saved = localStorage.getItem(getCacheKey(`bg_${year}_year_config`));
+        if (saved) {
+            const cfg = JSON.parse(saved);
+            document.getElementById('yearBlurInp').value = cfg.blur || 0;
+            document.getElementById('yearBrightInp').value = cfg.brightness || 1;
+            previewYearStyle(); 
+        }
+    }
+}
+
+// 【关键】确保在渲染完年视图后调用初始化
+// 建议把 initYearLongPress() 放在你 renderYearView 函数的最末尾
+// 【新增】监听器：当背景被错误刷回月背景时，如果是年视图，强行纠正
+const observer = new MutationObserver(() => {
+    const el = document.getElementById('monthDisplay');
+    const isYearView = el && el.innerText.includes('年 全览');
+    if (isYearView) {
+        // 如果文字显示是年全览，但背景不是年背景，就刷一遍
+        const bgLayer = document.getElementById('bg-layer');
+        const yearBgId = `bg_${currentDate.getFullYear()}_year`;
+        // 检查当前背景是否包含年背景的 ID（简单判断）
+        if (bgLayer && !bgLayer.style.backgroundImage.includes('_year')) {
+            updateYearDisplayBg();
+        }
+    }
+});
+
+// 开始监听 body 类名或 monthDisplay 文字的变化
+const targetNode = document.getElementById('monthDisplay');
+if (targetNode) {
+    observer.observe(targetNode, { childList: true, characterData: true, subtree: true });
+}
+
+// 【新增/修复】保存年背景配置
+// 【修复版】确保所有变量定义正确
+async function saveYearSettings() {
+    // 1. 权限检查
+    const pass = sessionStorage.getItem('admin_temp_pass');
+    if (!pass) return alert("🔒 请先解锁管理员权限");
+
+    try {
+        // 2. 获取当前年份和滑块数值
+        const year = currentDate.getFullYear();
+        const blur = document.getElementById('yearBlurInp').value;
+        const bright = document.getElementById('yearBrightInp').value;
+        const alpha = document.getElementById('yearCardAlphaInp').value;
+
+        // 3. 【关键修复】在此处明确定义 configId，确保后面调用时它已存在
+        const configId = `bg_${year}_year_config`;
+        const configValue = JSON.stringify({ 
+            blur: blur, 
+            brightness: bright, 
+            cardAlpha: alpha 
+        });
+
+        console.log("准备保存配置:", configId, configValue);
+
+        // 4. 调用云端存储过程
+        await _db.rpc('secure_update_config_item', {
+            input_password: pass,
+            config_id: configId,
+            new_value: configValue
+        });
+        
+        // 5. 同步更新本地缓存
+        localStorage.setItem(getCacheKey(configId), configValue);
+        
+        alert("✅ 年视图设置已成功保存！");
+        
+        // 6. 关闭弹窗并刷新显示
+        document.getElementById('year-admin-modal').style.display = 'none';
+        
+        // 确保刷新函数存在再调用
+        if (typeof updateYearDisplayBg === 'function') {
+            await updateYearDisplayBg();
+        }
+
+    } catch (e) { 
+        console.error("保存失败详情:", e);
+        // 如果错误里包含 configId 相关的报错，说明上面的定义逻辑被跳过了
+        alert("❌ 保存失败，请检查网络或权限"); 
+    }
+}
 
 </script>
 
